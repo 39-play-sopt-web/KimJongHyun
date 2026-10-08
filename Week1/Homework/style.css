@@ -4,3 +4,41 @@
     box-sizing : border-box;
 }
 
+.profile {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  object-position: center 25%;
+  border-radius: 50%;
+}
+
+.github-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.header{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    align-items: center;
+
+    padding: 12px 24px;
+    width: 100%;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
+    background-color: white;
+}
+
+.header h1 {
+    text-align: center;
+    font-size: 24px;
+}
+
+.header a{
+    justify-self: end;
+}
