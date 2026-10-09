@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김종현의 블로그</title>
+    <!-- html과 css연결 -->
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+    <header class="header">
+        <a  
+        
+            href="https://jonglab.tistory.com/" 
+            target="_blank"
+            rel="noopenrer noreferrer" 
+        >
+
+            <img
+                class="profile"
+                src="./images/profile.png" 
+                alt="내 프로필 사진" 
+            />
+
+        </a>
+
+    <h1>종현이의 블로그</h1>
+
+    <nav class="header-social" aria-label="소셜 링크">
+
+
+        <!-- Github -->
+        <a  
+            class="social-link"    
+            href="https://github.com/KimJongHyun2" 
+            target="_blank"
+            rel="noopenrer noreferrer"
+        >
+        
+            <img 
+                class="github-icon" 
+                src="./images/github-icon.png" 
+                alt="Github 프로필로 이동" 
+            />
+        </a>
+    </nav>
+    </header>
+
+    <!-- 사이드 네비게이션 -->
+    <!-- 용어 정리
+    <ul> 순서 없는 목록
+    <li> 목록의 각 항목
+    <a> 클릭 가능 링크
+    href="#album" : album이 있는 요소로 이동
+    aria-label : 보조기술에 목차의 이름을 전달 
+        -->
+
+    <div class="layout">   
+        <nav class="side-nav" aria-label="페이지 목차">
+            <ul>
+                <li><a href="#photo-dump">포토 덤프</a></li>
+                <li><a href="#album">좋아하는 것</a></li>
+                <li><a href="#interests">내 관심사</a></li>
+                <li><a href="#to-webtory">TO. 웹토리</a></li>
+
+            </ul>
+        </nav>
+
+        <!-- 포토 덤프 이미지 -->
+        <main>
+            <section id="photo-dump">
+                <h2>포토 덤프</h2>
+
+                <div class="photo-grid">
+                    <div class="photo1 photo-item">
+                        <img src="./images/photo1.jpg" alt="첫 번째 사진" />
+                    </div>
+                    <div class="photo2 photo-item">
+                        <img src="./images/photo2.jpg" alt="두 번째 사진" />
+                    </div>
+                    <div class="photo3 photo-item">
+                        <img src="./images/photo3.jpg" alt="세 번째 사진" />
+                    </div>
+                    <div class="photo4 photo-item">
+                        <img src="./images/photo4.jpg" alt="네 번째 사진" />
+                    </div>
+                    <div class="photo5 photo-item">
+                        <img src="./images/photo5.jpg" alt="다섯 번째 사진" />
+                    </div>
+                    <div class="photo6 photo-item">
+                        <img src="./images/photo6.jpg" alt="여섯 번째 사진" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- 좋아하는 것 -->
+            <section id="album">
+                <h2>좋아하는 것 : 음악, 콘서트</h2>
+
+                <div class="album">
+                    <img src="./images/album1.jpg" alt="좋아하는 사진 1" />
+                    <img src="./images/album2.webp" alt="좋아하는 사진 2" />
+                    <img src="./images/album3.png" alt="좋아하는 사진 3" />
+                    <img src="./images/album4.png" alt="좋아하는 사진 4" />
+                    <img src="./images/album5.jpg" alt="좋아하는 사진 5" />
+                    <img src="./images/album6.png" alt="좋아하는 사진 6" />
+                    <img src="./images/album7.png" alt="좋아하는 사진 7" />
+                    <img src="./images/album8.jpg" alt="좋아하는 사진 8" />
+                </div>
+            </section>
+
+
+            <!-- 내 관심사 -->
+            <section id="interests">
+                <h2>내 관심사</h2>
+
+                <div class="interest-grid">
+
+                    <!-- 1. 로이킴 -->
+                    <article class="interest-card">
+                        <img src="./images/interest1.jpg" alt="로이킴" />
+                        <h3>로이킴</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 2. 박은빈 -->
+                    <article class="interest-card">
+                        <img src="./images/interest2.jpg" alt="박은빈" />
+                        <h3>박은빈</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 3. 돈까스 -->
+                    <article class="interest-card">
+                        <img src="./images/interest3.jpg" alt="돈까스" />
+                        <h3>돈까스</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 4. 개발 -->
+                    <article class="interest-card">
+                        <img src="./images/interest4.png" alt="개발" />
+                        <h3>개발</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 5. SOPT -->
+                    <article class="interest-card">
+                        <img src="./images/interest5.png" alt="SOPT" />
+                        <h3>SOPT</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 6. 낭만 -->
+                    <article class="interest-card">
+                        <img src="./images/interest6.jpg" alt="낭만" />
+                        <h3>낭만</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 7. 주짓수 -->
+                    <article class="interest-card">
+                        <img src="./images/interest7.jpeg" alt="주짓수" />
+                        <h3>주짓수</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                    <!-- 8. 영크크 -->
+                    <article class="interest-card">
+                        <img src="./images/interest8.jpeg" alt="영크크" />
+                        <h3>영크크</h3>
+                        <div class="interest-buttons">
+                            <button type="button">좋아요</button>
+                            <button type="button">싫어요</button>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+
+            <!-- To. 웹토리 -->
+            <section id="to-webtory">
+                <h2>To. 웹토리</h2>
+
+                <div class="message-box">
+                    <p class="webtory-message">방가방가 웹토리</p>
+                    <p class="webtory-message">
+                        즐거운 추억 많이 만들어요!
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+    </div>   
+
+     <footer class="footer">
+        <p>Designed & Developed by Kim Jonghyun.</p>
+        <small>© 2026 김종현. All rights reserved.</small>
+    </footer>
+        
+</body>
+</html>
