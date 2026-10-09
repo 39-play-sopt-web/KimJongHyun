@@ -237,6 +237,24 @@ main section {
 }
 
 
+.interest-buttons button {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 10px;
+    background-color: white;
+    cursor: pointer;
+}
+
+/* 좋아요 Hover */
+.interest-buttons button:first-child:hover {
+    background-color: #d9f5df;
+}
+
+/* 싫어요 Hover */
+.interest-buttons button:last-child:hover {
+    background-color: #ffe0e0;
+}
+
 /* To. 웹토리 */
 .message-box {
     padding: 20px;
@@ -292,4 +310,47 @@ main section {
 
 body {
     margin: 0;
+}
+
+
+
+
+
+/* 전체 배경 */
+body {
+    background-color: #f7f8f4;
+    color: #26352b;
+}
+
+/* 사이드 목차 */
+.side-nav {
+    background-color: #e8eee5;
+    border-radius: 12px;
+}
+
+/* 섹션 제목 */
+main h2 {
+    color: #26352b;
+    border-left: 4px solid #90ad87;
+    padding-left: 12px;
+}
+
+/* 섹션 사이 여백 */
+main section {
+    margin-bottom: 56px;
+}
+
+/* 섹션 제목과 콘텐츠 사이 여백 */
+main section h2 {
+    margin-bottom: 20px;
+}
+
+/* 관심사 카드 내부 여백 */
+.interest-card h3 {
+    margin: 0;
+    padding: 16px 14px 8px;
+}
+
+.interest-buttons {
+    padding: 8px 14px 16px;
 }
