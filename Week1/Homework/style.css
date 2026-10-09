@@ -164,6 +164,7 @@ main section {
     gap: 12px;
     overflow-x: auto;
     padding: 12px 0;
+    scroll-snap-type: x mandatory;
 }
 
 .album img {
@@ -171,17 +172,7 @@ main section {
     height: 180px;
     object-fit: cover;
     flex-shrink: 0;
-}
-
-/* 끊임없는 무한 배너 */
-.album {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding: 12px 0;
-
-    /* Firefox */
-    scrollbar-width: none;
+    scroll-snap-align: start;
 }
 
 /* Chrome, Safari, Edge */
@@ -195,7 +186,7 @@ main section {
 
 .interest-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 16px;
 }
 
@@ -243,4 +234,28 @@ main section {
 /* 텍스트 뒤에 도토리 추가 */
 .webtory-message::after {
     content: " 🌰";
+}
+
+
+/* 관심사 카드 반응형 */
+
+/* 화면 너비 1200px 이하: 4열 */
+@media (max-width: 1200px) {
+    .interest-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* 화면 너비 900px 이하: 3열 */
+@media (max-width: 900px) {
+    .interest-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* 화면 너비 600px 이하: 2열 */
+@media (max-width: 600px) {
+    .interest-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
