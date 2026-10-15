@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Header from './components/Header';
+import GameBoard from './components/GameBoard';
 
 // state : react 컴포넌트가 기억하고 관리하는 데이터
 // 시간, 사용자 행동에 따라 달라지는 데이터 state로 관리
@@ -15,7 +16,7 @@ function App() {
       <Header page={page} setPage={setPage} />
 
       {page === 'game' ? (
-        <h1>게임 화면</h1>
+        <GameBoard /> 
       ) : (
         <h1>랭킹 화면</h1>
       )}
