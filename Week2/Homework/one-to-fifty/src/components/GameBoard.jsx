@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import style from './GameBoard.module.css';
 
 // usestate: 숫자 배열 기억
@@ -20,8 +20,27 @@ const GameBoard = () => {
 // nextNumber = 지금 눌러야 하는 정답 숫자
   const [nextNumber, setNextNumber] = useState(1);
 
+  // 타이머 만들기
+  const [gameTime, setGameTime] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (isPlaying) {
+      const timer = setInterval(() => {
+        setGameTime((time) => time + 0.1);
+      }, 100);
+
+      return () => clearInterval(timer);
+    }
+  }, [isPlaying]);
+
+
   const handleClick = (number) => {
   if (number === nextNumber) {
+
+    if (number === 1){
+      setIsPlaying(true);
+    }
     const newNumbers = numbers.map((num) => {
       if (num === number) {
 
@@ -41,11 +60,12 @@ const GameBoard = () => {
     setNextNumber(nextNumber + 1);
 
     if (number === 18){
+      setIsPlaying(false);
       // 게임 종료 알림
       alert('게임 종료!');
 
 
-      // 종료 > 재시작 (숫자 관련 setter 3개 호출)
+      // 종료 > 재시작 (숫자 관련 setter 3개 호출), 시간 초기화
       setNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5));
 
       setRemainingNumbers(
@@ -53,6 +73,8 @@ const GameBoard = () => {
       );
 
       setNextNumber(1);
+
+      setGameTime(0);
     }
   }
 };
@@ -60,6 +82,8 @@ const GameBoard = () => {
   return (
     <div>
       <h2>다음 숫자: {nextNumber}</h2>
+      {/* toFixed: 시간을 소수점 둘째까지 표시하는 메서드 */}
+      <p>게임 시간: {gameTime.toFixed(2)}초</p>
 
       <div className={style.board}>
         {/* map: 배열의 각 숫자들을 버튼으로 변환 */}
