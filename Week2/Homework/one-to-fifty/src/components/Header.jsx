@@ -1,7 +1,6 @@
 import style from './Header.module.css';
 
-const Header = (props) => {
-  const { page, setPage } = props;
+const Header = ({ page, setPage, gameTime }) => {
 
   return (
     <header className={style.header}>
@@ -18,7 +17,7 @@ const Header = (props) => {
             <option value="3" disabled>Level 3</option>
           </select>
 
-          <span>00.00초</span>
+          <span>{gameTime.toFixed(2)}초</span>
         </div>
       )}
     </header>

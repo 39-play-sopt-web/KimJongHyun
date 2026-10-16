@@ -7,16 +7,18 @@ import GameBoard from './components/GameBoard';
 // usestate: 함수 컨포넌트에서 state를 사용할 수 있게 해주는 react hook
 // props : 부모 컨포넌트 > 자식 컨포넌트 전달하는 값
 // app.jsx에서 생성한 setpage 함수를 header.jsx에서도 사용하기 위해서 props 사용
+// gametime도 마찬가지
 
 function App() {
   const [page, setPage] = useState('game');
+  const [gameTime, setGameTime] = useState(0);
 
   return (
     <>
-      <Header page={page} setPage={setPage} />
+      <Header page={page} setPage={setPage} gameTime={gameTime} />
 
       {page === 'game' ? (
-        <GameBoard /> 
+        <GameBoard gameTime={gameTime} setGameTime={setGameTime} /> 
       ) : (
         <h1>랭킹 화면</h1>
       )}
