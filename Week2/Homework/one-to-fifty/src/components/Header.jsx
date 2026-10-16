@@ -27,8 +27,8 @@ const Header = ({ page, setPage, gameTime }) => {
       </nav>
 
       {page === "game" && (
-        <div className={style.info}>
-          <select defaultValue="1">
+        <div className="flex items-center gap-4">
+          <select className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-lg font-medium shadow-sm">
             <option value="1">Level 1</option>
             <option value="2" disabled>
               Level 2
@@ -38,7 +38,9 @@ const Header = ({ page, setPage, gameTime }) => {
             </option>
           </select>
 
-          <span>{gameTime.toFixed(2)}초</span>
+          <span className="rounded-lg bg-slate-900 px-4 py-3 text-lg font-semibold text-white tabular-nums shadow-sm">
+            {gameTime.toFixed(2)}초
+          </span>
         </div>
       )}
     </header>
