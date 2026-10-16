@@ -65,9 +65,22 @@ const GameBoard = ({ gameTime, setGameTime}) => {
     setNextNumber(nextNumber + 1);
 
     if (number === 18){
+      const finalTime = (Date.now() - startTime.current) / 1000;
+
+      // 랭킹 구현 위해 JSON 개념 추가 (API쪽이라는데 잘 모르겠음 어려움)
+      const records = JSON.parse(localStorage.getItem('gameRecords')) || [];
+
+      records.push({
+        time: Number(finalTime.toFixed(2)),
+        level: 1,
+        date: new Date().toLocaleString('ko-KR'),
+      });
+
+      localStorage.setItem('gameRecords', JSON.stringify(records));
+
       setIsPlaying(false);
       // 게임 종료 알림
-      alert('게임 종료!');
+      alert(`게임 종료! ${finalTime.toFixed(2)}초`);
 
 
       // 종료 > 재시작 (숫자 관련 setter 3개 호출), 시간 초기화
