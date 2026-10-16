@@ -131,7 +131,8 @@ const GameBoard = ({ gameTime, setGameTime }) => {
             className={`rounded-xl border border-gray-200 bg-white text-gray-900
               shadow-sm font-semibold
               hover:border-gray-400 hover:bg-gray-50
-              active:scale-95 transition-all duration-150
+              active:scale-95 active:bg-gray-900 active:text-white
+              transition-all duration-150   
               ${number === null ? style.empty : ""}`}
             onClick={() => handleClick(number)}
           >
