@@ -146,7 +146,10 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
 
       <div
         className={`${style.board} mx-auto mt-6`}
-        style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)` }}
+        style={{
+          gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
+          width: `${boardSize * 110}px`,
+        }}
       >
         {/* map: 배열의 각 숫자들을 버튼으로 변환 */}
         {/* onclick:버튼을 클릭할때 */}
