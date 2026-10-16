@@ -4,7 +4,13 @@ const Ranking = () => {
   const [records, setRecords] = useState(
     () => JSON.parse(localStorage.getItem("gameRecords")) || [],
   );
-  records.sort((a, b) => a.time - b.time);
+  records.sort((a, b) => {
+    if (a.level !== b.level) {
+      return b.level - a.level;
+    }
+
+    return a.time - b.time;
+  });
 
   // 랭킹 초기화 함수
   const clearRecords = () => {
@@ -33,8 +39,9 @@ const Ranking = () => {
       )}
 
       {records.map((record, index) => (
-        <p key={index}
-        className="mb-3 rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm"
+        <p
+          key={index}
+          className="mb-3 rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm"
         >
           {/* index 0이 1등이기 때문에 index+1로 표시 */}
           {index + 1}등 - Level {record.level} - {record.time}초 - {record.date}
