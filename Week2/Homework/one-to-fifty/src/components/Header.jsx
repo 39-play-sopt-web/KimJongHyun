@@ -1,6 +1,10 @@
+import { useState } from "react";
+
 import style from "./Header.module.css";
 
 const Header = ({ page, setPage, gameTime, level, setLevel }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <header className={`${style.header} px-8 py-5 shadow-sm`}>
       <nav className={style.nav}>
@@ -28,16 +32,46 @@ const Header = ({ page, setPage, gameTime, level, setLevel }) => {
 
       {page === "game" && (
         <div className="flex items-center gap-4">
-          <select
-            value={level}
-            onChange={(e) => {
-              setLevel(Number(e.target.value));
+          <div
+            className="relative"
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget)) {
+                setIsOpen(false);
+              }
             }}
           >
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
-          </select>
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-expanded={isOpen}
+              className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 font-medium text-gray-900 transition-colors hover:bg-gray-100"
+            >
+              Level {level}
+              <span className="text-sm">{isOpen ? "⌃" : "⌄"}</span>
+            </button>
+
+            {isOpen && (
+              <div className="absolute top-full right-0 z-50 mt-2 w-36 overflow-hidden rounded-xl border border-gray-200 bg-white p-1 shadow-lg">
+                {[1, 2, 3].map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setLevel(item);
+                      setIsOpen(false);
+                    }}
+                    className={`block w-full rounded-lg px-4 py-3 text-left transition-colors ${
+                      level === item
+                        ? "bg-gray-900 text-white"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Level {item}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <span className="rounded-lg bg-slate-900 px-4 py-3 text-lg font-semibold text-white tabular-nums shadow-sm">
             {gameTime.toFixed(2)}초
