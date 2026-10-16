@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import Header from './components/Header';
-import GameBoard from './components/GameBoard';
-import Ranking from './components/Ranking';
+import { useState } from "react";
+import Header from "./components/Header";
+import GameBoard from "./components/GameBoard";
+import Ranking from "./components/Ranking";
 
 // state : react 컴포넌트가 기억하고 관리하는 데이터
 // 시간, 사용자 행동에 따라 달라지는 데이터 state로 관리
@@ -11,15 +11,27 @@ import Ranking from './components/Ranking';
 // gametime도 마찬가지
 
 function App() {
-  const [page, setPage] = useState('game');
+  const [page, setPage] = useState("game");
   const [gameTime, setGameTime] = useState(0);
+  const [level, setLevel] = useState(1);
 
   return (
     <>
-      <Header page={page} setPage={setPage} gameTime={gameTime} />
+      <Header
+        page={page}
+        setPage={setPage}
+        gameTime={gameTime}
+        level={level}
+        setLevel={setLevel}
+      />
 
-      {page === 'game' ? (
-        <GameBoard gameTime={gameTime} setGameTime={setGameTime} /> 
+      {page === "game" ? (
+        <GameBoard
+          key={level}
+          level={level}
+          gameTime={gameTime}
+          setGameTime={setGameTime}
+        />
       ) : (
         <Ranking />
       )}

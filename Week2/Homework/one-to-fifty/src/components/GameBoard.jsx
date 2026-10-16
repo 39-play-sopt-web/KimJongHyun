@@ -8,14 +8,32 @@ import GameModal from "./GameModal";
 // 구조 분해 할당: 부모가 전달한 props 값 꺼내 씀
 
 // 처음에 나올 숫자 1~9
-const GameBoard = ({ gameTime, setGameTime }) => {
+const GameBoard = ({ gameTime, setGameTime, level }) => {
+  // 레벨 2, 3 구현하기
+  const boardSize = level + 2;
+  const cellCount = boardSize * boardSize;
+  const maxNumber = cellCount * 2;
+
+  // // 3x3 짜리 하드코딩 버전 주석처리
+  // const [numbers, setNumbers] = useState(() =>
+  //   [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5),
+  // );
+
   const [numbers, setNumbers] = useState(() =>
-    [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5),
+    Array.from({ length: cellCount }, (_, i) => i + 1).sort(
+      () => Math.random() - 0.5,
+    ),
   );
 
   // 나중에 나올 숫자 : 10~18
+  // const [remainingNumbers, setRemainingNumbers] = useState(() =>
+  //   [10, 11, 12, 13, 14, 15, 16, 17, 18].sort(() => Math.random() - 0.5),
+  // );
+
   const [remainingNumbers, setRemainingNumbers] = useState(() =>
-    [10, 11, 12, 13, 14, 15, 16, 17, 18].sort(() => Math.random() - 0.5),
+    Array.from({ length: cellCount }, (_, i) => i + cellCount + 1).sort(
+      () => Math.random() - 0.5,
+    ),
   );
 
   // nextNumber = 지금 눌러야 하는 정답 숫자
@@ -56,7 +74,7 @@ const GameBoard = ({ gameTime, setGameTime }) => {
       }
       const newNumbers = numbers.map((num) => {
         if (num === number) {
-          if (num > 9) {
+          if (num > cellCount) {
             return null;
           }
           return remainingNumbers[number - 1];
@@ -68,9 +86,9 @@ const GameBoard = ({ gameTime, setGameTime }) => {
       // 오류 디버깅
       // console.log('게임판 배열:', newNumbers, '길이:', newNumbers.length);
       setNumbers(newNumbers);
-      setNextNumber(nextNumber + 1);
+      setNextNumber(Math.min(nextNumber + 1, maxNumber));
 
-      if (number === 18) {
+      if (number === maxNumber) {
         const resultTime = (Date.now() - startTime.current) / 1000;
 
         // 랭킹 구현 위해 JSON 개념 추가 (API쪽이라는데 잘 모르겠음 어려움)
@@ -78,7 +96,7 @@ const GameBoard = ({ gameTime, setGameTime }) => {
 
         records.push({
           time: Number(resultTime.toFixed(2)),
-          level: 1,
+          level: level,
           date: new Date().toLocaleString("ko-KR"),
         });
 
@@ -98,10 +116,15 @@ const GameBoard = ({ gameTime, setGameTime }) => {
 
   // 게임 다시 시작하기
   const restartGame = () => {
-    setNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5));
-
+    setNumbers(
+      Array.from({ length: cellCount }, (_, i) => i + 1).sort(
+        () => Math.random() - 0.5,
+      ),
+    );
     setRemainingNumbers(
-      [10, 11, 12, 13, 14, 15, 16, 17, 18].sort(() => Math.random() - 0.5),
+      Array.from({ length: cellCount }, (_, i) => i + cellCount + 1).sort(
+        () => Math.random() - 0.5,
+      ),
     );
 
     setNextNumber(1);
@@ -114,12 +137,17 @@ const GameBoard = ({ gameTime, setGameTime }) => {
     <div className="flex min-h-[calc(100vh-130px)] flex-col items-center bg-slate-50 pt-12">
       <h2 className="mb-2 text-3xl font-bold text-gray-900">
         다음 숫자: {nextNumber}
-        <span className="ml-2 text-lg font-normal text-gray-400">/ 18</span>
+        <span className="ml-2 text-lg font-normal text-gray-400">
+          / {maxNumber}
+        </span>
       </h2>
       {/* toFixed: 시간을 소수점 둘째까지 표시하는 메서드 */}
       {/* <p>게임 시간: {gameTime.toFixed(2)}초</p> */}
 
-      <div className={`${style.board} mx-auto mt-6`}>
+      <div
+        className={`${style.board} mx-auto mt-6`}
+        style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)` }}
+      >
         {/* map: 배열의 각 숫자들을 버튼으로 변환 */}
         {/* onclick:버튼을 클릭할때 */}
         {/* handleclick: 클릭한 버튼의 숫자를 함수에 전달 */}

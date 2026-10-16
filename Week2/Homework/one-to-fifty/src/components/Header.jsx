@@ -1,6 +1,6 @@
 import style from "./Header.module.css";
 
-const Header = ({ page, setPage, gameTime }) => {
+const Header = ({ page, setPage, gameTime, level, setLevel }) => {
   return (
     <header className={`${style.header} px-8 py-5 shadow-sm`}>
       <nav className={style.nav}>
@@ -28,14 +28,15 @@ const Header = ({ page, setPage, gameTime }) => {
 
       {page === "game" && (
         <div className="flex items-center gap-4">
-          <select className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-lg font-medium shadow-sm">
+          <select
+            value={level}
+            onChange={(e) => {
+              setLevel(Number(e.target.value));
+            }}
+          >
             <option value="1">Level 1</option>
-            <option value="2" disabled>
-              Level 2
-            </option>
-            <option value="3" disabled>
-              Level 3
-            </option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
           </select>
 
           <span className="rounded-lg bg-slate-900 px-4 py-3 text-lg font-semibold text-white tabular-nums shadow-sm">
