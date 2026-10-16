@@ -1,4 +1,6 @@
-.header {
+/* tailwind css로 인한 기존 css 주석 처리 */
+
+/* .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,4 +42,34 @@
 .nav button.active {
   background-color: #333;
   color: white;
+} */
+
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 40px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+}
+
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.info select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }

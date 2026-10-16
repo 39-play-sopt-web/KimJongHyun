@@ -1,20 +1,41 @@
-import style from './Header.module.css';
+import style from "./Header.module.css";
 
 const Header = ({ page, setPage, gameTime }) => {
-
   return (
-    <header className={style.header}>
+    <header className={`${style.header} px-8 py-5 shadow-sm`}>
       <nav className={style.nav}>
-        <button onClick={() => setPage('game')}>게임</button>
-        <button onClick={() => setPage('ranking')}>랭킹</button>
+        <button
+          className={`rounded-lg px-5 py-3 font-medium transition-colors ${
+            page === "game"
+              ? "bg-gray-900 text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+          onClick={() => setPage("game")}
+        >
+          게임
+        </button>
+        <button
+          className={`rounded-lg px-5 py-3 font-medium transition-colors ${
+            page === "ranking"
+              ? "bg-gray-900 text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+          onClick={() => setPage("ranking")}
+        >
+          랭킹
+        </button>
       </nav>
 
-      {page === 'game' && (
+      {page === "game" && (
         <div className={style.info}>
           <select defaultValue="1">
             <option value="1">Level 1</option>
-            <option value="2" disabled>Level 2</option>
-            <option value="3" disabled>Level 3</option>
+            <option value="2" disabled>
+              Level 2
+            </option>
+            <option value="3" disabled>
+              Level 3
+            </option>
           </select>
 
           <span>{gameTime.toFixed(2)}초</span>
