@@ -1,122 +1,98 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+//다시 정리 
+//usestate: 화면에서 쓸 데이터를 상태로 관리
+//useeffect: 렌더링, 영화 과제에서는 평점이 바뀔때마다 api 재요청
+//의존성 배열 []: 처음 마운트 될때, [~,~]: 해당 ~이벤트가 있을때 
+
+import { useEffect, useState } from "react";
+import { getMovies, type Movie } from "./apis/movie";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [minRating, setMinRating] = useState<number>();
+  const [maxRating, setMaxRating] = useState<number>();
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const data = await getMovies(minRating, maxRating);
+      setMovies(data.results);
+    };
+
+    fetchMovies();
+  }, [minRating, maxRating]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+    <div>
+      <div>
         <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() => {
+            setMinRating(undefined);
+            setMaxRating(undefined);
+          }}
         >
-          Count is {count}
+          전체
         </button>
-      </section>
 
-      <div className="ticks"></div>
+        <button
+          onClick={() => {
+            setMinRating(9);
+            setMaxRating(undefined);
+          }}
+        >
+          9점 이상
+        </button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <button
+          onClick={() => {
+            setMinRating(8);
+            setMaxRating(9);
+          }}
+        >
+          8 ~ 9점
+        </button>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <button
+          onClick={() => {
+            setMinRating(7);
+            setMaxRating(8);
+          }}
+        >
+          7 ~ 8점
+        </button>
+
+        <button
+          onClick={() => {
+            setMinRating(6);
+            setMaxRating(7);
+          }}
+        >
+          6 ~ 7점
+        </button>
+
+        <button
+          onClick={() => {
+            setMinRating(undefined);
+            setMaxRating(6);
+          }}
+        >
+          6점 미만
+        </button>
+      </div>
+      <h1>영화 탐색 페이지</h1>
+      {movies.map((movie) => (
+        <article key={movie.id}>
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={`${movie.title} 포스터`}
+          />
+
+          <h2>{movie.title}</h2>
+          <p>⭐ {movie.vote_average.toFixed(1)}</p>
+          <p>개봉일: {movie.release_date}</p>
+          <p>{movie.overview}</p>
+        </article>
+      ))}
+    </div>
+  );
 }
 
-export default App
+export default App;
