@@ -2,7 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import GlobalStyle from "./styles/GlobalStyle";
 
-
+// 라우터 적용
+import { BrowserRouter } from "react-router";
 
 // ThemeProvider 연결
 import { ThemeProvider } from "@emotion/react";
@@ -15,7 +16,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
 );

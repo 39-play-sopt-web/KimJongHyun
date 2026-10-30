@@ -32,7 +32,6 @@ export const getMovies = async (
   const response = await apiClient.get<MovieResponse>("/discover/movie", {
     params: {
       language: "ko-KR",
-      page: 1,
       "vote_average.gte": minRating,
       "vote_average.lte": maxRating,
       page,
@@ -41,3 +40,14 @@ export const getMovies = async (
 
   return response.data;
 };
+
+// 영화 ID를 이용해 상세 정보 가져오기
+export const getMovieDetail = async (movieId: number): Promise<Movie> => {
+  const response = await apiClient.get<Movie>(`/movie/${movieId}`, {
+    params: {
+      language: "ko-KR",
+    },
+  });
+
+  return response.data;
+  };
