@@ -26,6 +26,8 @@ export interface MovieResponse {
 export const getMovies = async (
   minRating?: number,
   maxRating?: number,
+  page: number = 1
+  
 ): Promise<MovieResponse> => {
   const response = await apiClient.get<MovieResponse>("/discover/movie", {
     params: {
@@ -33,6 +35,7 @@ export const getMovies = async (
       page: 1,
       "vote_average.gte": minRating,
       "vote_average.lte": maxRating,
+      page,
     },
   });
 
