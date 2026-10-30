@@ -12,25 +12,54 @@ import { theme } from "./styles/theme";
 // emotion으로 CSS변경 진짜 모르겠다 CSS세상은 다음 딥다이브주제다
 
 const MoviePage = styled.div`
-  min-height: 100vh;
-  padding: 40px;
-  background-color: ${theme.colors.background};
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  box-sizing: border-box;
   color: ${theme.colors.text};
 `;
 
-const MovieGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+// 헤더 만들기
+const PageHeader = styled.header`
+  width: 100%;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  background-color: #202638;
+  border-bottom: 1px solid #333;
 
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
   }
 
-  @media (max-width: 600px) {
+  /* 찾았다 span 부분은 primary 색 */
+  span {
+    color: ${theme.colors.primary};
+  }
+`;
+
+
+
+const MovieGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 480px) {
     grid-template-columns: 1fr;
   }
 `;
+
 // 영화 카드 hover 효과
 const MovieCard = styled.article`
   transition: transform 0.2s ease;
@@ -75,9 +104,20 @@ function App() {
     fetchMovies();
   }, [minRating, maxRating]);
 
+  
   return (
+    <>
+
+    <PageHeader>
+        <h1>
+        {/* span 문장이나 글자의 일부분만 묶음 */}
+      JONG <span>MOVIE</span>
+      </h1>
+    </PageHeader>
+
+
     <MoviePage>
-      <h1>영화 탐색 페이지</h1>
+      <h2>영확 목록</h2>
       	<RatingFilters>
         <FilterButton
           onClick={() => {
@@ -148,6 +188,7 @@ function App() {
         ))}
       </MovieGrid>
     </MoviePage>
+    </>
   );
 }
 
