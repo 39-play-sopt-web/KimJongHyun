@@ -1,11 +1,65 @@
 //다시 정리
 //usestate: 화면에서 쓸 데이터를 상태로 관리
-//useeffect: 렌더링, 영화 과제에서는 평점이 바뀔때마다 api 재요청
+//useeffect: 영화 과제에서는 평점이 바뀔때마다 api 재요청
 //의존성 배열 []: 처음 마운트 될때, [~,~]: 해당 ~이벤트가 있을때
 
 import { useEffect, useState } from "react";
 import { getMovies, type Movie } from "./apis/movie";
-import "./App.css"; // 추가
+import "./App.css";
+import styled from "@emotion/styled";
+import { theme } from "./styles/theme";
+
+// emotion으로 CSS변경 진짜 모르겠다 CSS세상은 다음 딥다이브주제다
+
+const MoviePage = styled.div`
+  min-height: 100vh;
+  padding: 40px;
+  background-color: ${theme.colors.background};
+  color: ${theme.colors.text};
+`;
+
+const MovieGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+// 영화 카드 hover 효과
+const MovieCard = styled.article`
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+  }
+`;
+
+const RatingFilters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+`;
+
+const FilterButton = styled.button`
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${theme.colors.primary};
+  }
+`;
+
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -22,66 +76,66 @@ function App() {
   }, [minRating, maxRating]);
 
   return (
-    <div className="movie-page">
-      <div className="rating-filters">
-        <button
+    <MoviePage>
+      <h1>영화 탐색 페이지</h1>
+      	<RatingFilters>
+        <FilterButton
           onClick={() => {
             setMinRating(undefined);
             setMaxRating(undefined);
           }}
         >
           전체
-        </button>
+        </FilterButton>
 
-        <button
+        <FilterButton
           onClick={() => {
             setMinRating(9);
             setMaxRating(undefined);
           }}
         >
           9점 이상
-        </button>
+        </FilterButton>
 
-        <button
+        <FilterButton
           onClick={() => {
             setMinRating(8);
             setMaxRating(9);
           }}
         >
           8 ~ 9점
-        </button>
+        </FilterButton>
 
-        <button
+        <FilterButton
           onClick={() => {
             setMinRating(7);
             setMaxRating(8);
           }}
         >
           7 ~ 8점
-        </button>
+        </FilterButton>
 
-        <button
+        <FilterButton
           onClick={() => {
             setMinRating(6);
             setMaxRating(7);
           }}
         >
           6 ~ 7점
-        </button>
+        </FilterButton>
 
-        <button
+        <FilterButton
           onClick={() => {
             setMinRating(undefined);
             setMaxRating(6);
           }}
         >
           6점 미만
-        </button>
-      </div>
-      <h1>영화 탐색 페이지</h1>
-      <div className="movie-grid">
+        </FilterButton>
+      </RatingFilters>
+      <MovieGrid>
         {movies.map((movie) => (
-          <article className="movie-card" key={movie.id}>
+          <MovieCard className="movie-card" key={movie.id}>
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={`${movie.title} 포스터`}
@@ -90,10 +144,10 @@ function App() {
             <p>⭐ {movie.vote_average.toFixed(1)}</p>
             <p>개봉일: {movie.release_date}</p>
             <p>{movie.overview}</p>
-          </article>
+          </MovieCard>
         ))}
-      </div>
-    </div>
+      </MovieGrid>
+    </MoviePage>
   );
 }
 
