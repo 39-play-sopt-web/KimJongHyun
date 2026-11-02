@@ -4,7 +4,7 @@ const Ranking = () => {
   const [records, setRecords] = useState(
     () => JSON.parse(localStorage.getItem("gameRecords")) || [],
   );
-  records.sort((a, b) => {
+  const sortedRecords = [...records].sort((a, b) => {
     if (a.level !== b.level) {
       return b.level - a.level;
     }
@@ -38,7 +38,7 @@ const Ranking = () => {
         </p>
       )}
 
-      {records.map((record, index) => (
+      {sortedRecords.map((record, index) => (
         <p
           key={index}
           className="mb-3 rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm"
