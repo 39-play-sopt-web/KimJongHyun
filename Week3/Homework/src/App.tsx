@@ -145,6 +145,14 @@ function MovieList() {
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
+  // 평점 필터 변경 시 영화 목록과 페이지 초기화
+  const changeRating = (min?: number, max?: number) => {
+    setMinRating(min);
+    setMaxRating(max);
+    setPage(1);
+    setMovies([]);
+  };
+
   useEffect(() => {
     const fetchMovies = async () => {
       setIsLoading(true);
@@ -211,12 +219,7 @@ function MovieList() {
           전체
         </FilterButton>
 
-        <FilterButton
-          onClick={() => {
-            setMinRating(9);
-            setMaxRating(undefined);
-          }}
-        >
+        <FilterButton onClick={() => changeRating(9, undefined)}>
           9점 이상
         </FilterButton>
 
