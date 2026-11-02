@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Header from "./components/Header";
 import GameBoard from "./components/GameBoard";
 import Ranking from "./components/Ranking";
@@ -15,22 +15,34 @@ function App() {
   const [gameTime, setGameTime] = useState(0);
   const [level, setLevel] = useState(1);
 
+  const handlePageChange = (nextPage) => {
+    if (nextPage === "game" || nextPage === "ranking") setPage(nextPage);
+  };
+
+  const handleLevelChange = (nextLevel) => {
+    if ([1, 2, 3].includes(nextLevel)) setLevel(nextLevel);
+  };
+
+  // 타이머 effect가 매 렌더링마다 정리되지 않도록 함수 참조 유지
+  const handleTimeChange = useCallback((time) => {
+    setGameTime(time);
+  }, []);
+
   return (
     <>
       <Header
         page={page}
-        setPage={setPage}
+        onPageChange={handlePageChange}
         gameTime={gameTime}
         level={level}
-        setLevel={setLevel}
+        onLevelChange={handleLevelChange}
       />
 
       {page === "game" ? (
         <GameBoard
           key={level}
           level={level}
-          gameTime={gameTime}
-          setGameTime={setGameTime}
+          onTimeChange={handleTimeChange}
         />
       ) : (
         <Ranking />

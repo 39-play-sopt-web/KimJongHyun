@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import style from "./Header.module.css";
 
-const Header = ({ page, setPage, gameTime, level, setLevel }) => {
+const Header = ({ page, onPageChange, gameTime, level, onLevelChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ const Header = ({ page, setPage, gameTime, level, setLevel }) => {
               ? "bg-gray-900 text-white"
               : "bg-gray-200 hover:bg-gray-300"
           }`}
-          onClick={() => setPage("game")}
+          onClick={() => onPageChange("game")}
         >
           게임
         </button>
@@ -28,7 +28,7 @@ const Header = ({ page, setPage, gameTime, level, setLevel }) => {
               ? "bg-gray-900 text-white"
               : "bg-gray-200 hover:bg-gray-300"
           }`}
-          onClick={() => setPage("ranking")}
+          onClick={() => onPageChange("ranking")}
         >
           랭킹
         </button>
@@ -62,7 +62,7 @@ const Header = ({ page, setPage, gameTime, level, setLevel }) => {
                       key={item}
                       type="button"
                       onClick={() => {
-                        setLevel(item);
+                        onLevelChange(item);
                         setIsOpen(false);
                       }}
                       className={`block w-full rounded-lg px-4 py-3 text-left transition-colors ${

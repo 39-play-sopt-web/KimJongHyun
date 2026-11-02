@@ -9,7 +9,7 @@ import { shuffle } from "../utils/shuffle";
 // 구조 분해 할당: 부모가 전달한 props 값 꺼내 씀
 
 // 처음에 나올 숫자 1~9
-const GameBoard = ({ gameTime, setGameTime, level }) => {
+const GameBoard = ({ onTimeChange, level }) => {
   // 레벨 2, 3 구현하기
   const boardSize = level + 2;
   const cellCount = boardSize * boardSize;
@@ -44,29 +44,29 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
   const [showModal, setShowModal] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
 
+  const startTime = useRef(null);
+
   useEffect(() => {
     if (isPlaying) {
       const timer = setInterval(() => {
-        setGameTime((Date.now() - startTime.current) / 1000);
+        onTimeChange((Date.now() - startTime.current) / 1000);
       }, 100);
 
       return () => clearInterval(timer);
     }
-  }, [isPlaying]);
-
-  const startTime = useRef(null);
+  }, [isPlaying, onTimeChange]);
 
   // 게임 화면을 벗어나면 타이머 초기화
   useEffect(() => {
     return () => {
-      setGameTime(0);
+      onTimeChange(0);
     };
-  }, [setGameTime]);
+  }, [onTimeChange]);
 
-  const handleClick = (number) => {
+  const handleClick = (number, clickedAt) => {
     if (number === nextNumber) {
       if (number === 1) {
-        startTime.current = Date.now();
+        startTime.current = clickedAt;
         setIsPlaying(true);
       }
       const newNumbers = numbers.map((num) => {
@@ -86,7 +86,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
       setNextNumber(Math.min(nextNumber + 1, maxNumber));
 
       if (number === maxNumber) {
-        const resultTime = (Date.now() - startTime.current) / 1000;
+        const resultTime = (clickedAt - startTime.current) / 1000;
 
         // 랭킹 구현 위해 JSON 개념 추가 (API쪽이라는데 잘 모르겠음 어려움)
         const records = JSON.parse(localStorage.getItem("gameRecords")) || [];
@@ -100,7 +100,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
         localStorage.setItem("gameRecords", JSON.stringify(records));
 
         setIsPlaying(false);
-        setGameTime(resultTime);
+        onTimeChange(resultTime);
 
         // 게임 종료 알림
         // alert(`게임 종료! ${resultTime.toFixed(2)}초`); 주석 처리
@@ -121,7 +121,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
     );
 
     setNextNumber(1);
-    setGameTime(0);
+    onTimeChange(0);
     setIsPlaying(false);
     setShowModal(false);
   };
@@ -158,7 +158,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
               active:scale-95 active:bg-gray-900 active:text-white
               transition-all duration-150   
               ${number === null ? style.empty : ""}`}
-            onClick={() => handleClick(number)}
+            onClick={() => handleClick(number, Date.now())}
           >
             {number}
           </button>
