@@ -3,7 +3,7 @@
 
 import { createPortal } from 'react-dom';
 
-const GameModal = ({ level, finalTime, onRestart }) => {
+const GameModal = ({ level, finalTime, saveError, onRestart }) => {
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-80 rounded-2xl bg-white p-8 text-center shadow-xl">
@@ -14,6 +14,12 @@ const GameModal = ({ level, finalTime, onRestart }) => {
         <p className="mb-6 text-3xl font-bold">
           {finalTime.toFixed(2)}초
         </p>
+
+        {saveError && (
+          <p role="alert" className="mb-4 text-sm text-red-600">
+            기록을 저장하지 못했습니다.
+          </p>
+        )}
 
         <button
           onClick={onRestart}

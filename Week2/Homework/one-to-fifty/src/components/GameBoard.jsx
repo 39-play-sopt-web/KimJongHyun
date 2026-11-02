@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import style from "./GameBoard.module.css";
 import GameModal from "./GameModal";
+import { saveGameRecord } from "../utils/gameRecords";
 import { shuffle } from "../utils/shuffle";
 
 // usestate: 숫자 배열 기억, 시간 기억
@@ -43,6 +44,7 @@ const GameBoard = ({ onTimeChange, level }) => {
   // 게임 종료 모달
   const [showModal, setShowModal] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
+  const [saveError, setSaveError] = useState(false);
 
   const startTime = useRef(null);
 
@@ -89,15 +91,13 @@ const GameBoard = ({ onTimeChange, level }) => {
         const resultTime = (clickedAt - startTime.current) / 1000;
 
         // 랭킹 구현 위해 JSON 개념 추가 (API쪽이라는데 잘 모르겠음 어려움)
-        const records = JSON.parse(localStorage.getItem("gameRecords")) || [];
-
-        records.push({
+        const saved = saveGameRecord({
           time: Number(resultTime.toFixed(2)),
           level: level,
-          date: new Date().toLocaleString("ko-KR"),
+          date: new Date().toISOString(),
         });
 
-        localStorage.setItem("gameRecords", JSON.stringify(records));
+        setSaveError(!saved);
 
         setIsPlaying(false);
         onTimeChange(resultTime);
@@ -124,6 +124,7 @@ const GameBoard = ({ onTimeChange, level }) => {
     onTimeChange(0);
     setIsPlaying(false);
     setShowModal(false);
+    setSaveError(false);
   };
 
   return (
@@ -165,7 +166,7 @@ const GameBoard = ({ onTimeChange, level }) => {
         ))}
       </div>
 
-      {showModal && <GameModal level={level} finalTime={finalTime} onRestart={restartGame} />}
+      {showModal && <GameModal level={level} finalTime={finalTime} saveError={saveError} onRestart={restartGame} />}
     </div>
   );
 };

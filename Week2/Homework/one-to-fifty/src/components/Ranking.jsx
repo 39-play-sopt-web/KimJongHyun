@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { readGameRecords, formatRecordDate } from "../utils/gameRecords";
 
 const Ranking = () => {
-  const [records, setRecords] = useState(
-    () => JSON.parse(localStorage.getItem("gameRecords")) || [],
-  );
+  const [records, setRecords] = useState(readGameRecords);
+  const [clearError, setClearError] = useState(false);
   const sortedRecords = [...records].sort((a, b) => {
     if (a.level !== b.level) {
       return b.level - a.level;
@@ -14,8 +14,13 @@ const Ranking = () => {
 
   // 랭킹 초기화 함수
   const clearRecords = () => {
-    localStorage.removeItem("gameRecords");
-    setRecords([]);
+    try {
+      localStorage.removeItem("gameRecords");
+      setRecords([]);
+      setClearError(false);
+    } catch {
+      setClearError(true);
+    }
   };
 
   // 다시 정리하는 삼항 연산자. 삼항 != 세가지 상황
@@ -32,6 +37,8 @@ const Ranking = () => {
         기록 초기화
       </button>
 
+      {clearError && <p role="alert">기록을 초기화하지 못했습니다. 다시 시도해 주세요.</p>}
+
       {records.length === 0 && (
         <p className="rounded-xl border border-dashed border-gray-300 py-12 text-center text-gray-500">
           아직 등록된 기록이 없습니다.
@@ -44,7 +51,7 @@ const Ranking = () => {
           className="mb-3 rounded-xl border border-gray-200 bg-gray-50 p-5 shadow-sm"
         >
           {/* index 0이 1등이기 때문에 index+1로 표시 */}
-          {index + 1}등 - Level {record.level} - {record.time}초 - {record.date}
+          {index + 1}등 - Level {record.level} - {record.time}초 - {formatRecordDate(record.date)}
         </p>
       ))}
     </div>
