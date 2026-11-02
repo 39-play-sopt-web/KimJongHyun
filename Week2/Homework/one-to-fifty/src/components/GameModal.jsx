@@ -3,13 +3,13 @@
 
 import { createPortal } from 'react-dom';
 
-const GameModal = ({ finalTime, onRestart }) => {
+const GameModal = ({ level, finalTime, onRestart }) => {
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-80 rounded-2xl bg-white p-8 text-center shadow-xl">
         <h2 className="mb-2 text-2xl font-bold">게임 완료!</h2>
 
-        <p className="mb-2 text-gray-500">Level 1 클리어</p>
+        <p className="mb-2 text-gray-500">Level {level} 클리어</p>
 
         <p className="mb-6 text-3xl font-bold">
           {finalTime.toFixed(2)}초

@@ -172,7 +172,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
         ))}
       </div>
 
-      {showModal && <GameModal finalTime={finalTime} onRestart={restartGame} />}
+      {showModal && <GameModal level={level} finalTime={finalTime} onRestart={restartGame} />}
     </div>
   );
 };
