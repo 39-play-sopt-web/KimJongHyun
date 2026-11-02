@@ -1,0 +1,17 @@
+.board {
+  display: grid;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+}
+
+.board button {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* 버튼 사라지게 하기 */
+.empty {
+  visibility: hidden;
+}
