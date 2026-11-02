@@ -43,12 +43,9 @@ const PageHeader = styled.header`
     font-weight: bold;
   }
 
-  h1 button {
-    background: none;
-    border: none;
-    padding: 0;
+  h1 a {
     color: inherit;
-    font: inherit;
+    text-decoration: none;
     cursor: pointer;
   }
 
@@ -110,7 +107,7 @@ const RatingBadge = styled.span`
   right: 10px;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 6px 10px;F
+  padding: 6px 10px;
   border-radius: 6px;
   font-size: 13px;
 `;
@@ -155,6 +152,19 @@ function MovieList() {
       try {
         const data = await getMovies(minRating, maxRating, page);
 
+        // 정보 없는것에 대한 에외처리 확인해보는 개발자 콘솔 코드
+
+        const noOverview = data.results.filter(
+          (movie) => !movie.overview.trim(),
+        );
+
+        console.table(
+          noOverview.map((movie) => ({
+            id: movie.id,
+            title: movie.title,
+          })),
+        );
+
         setMovies((prev) =>
           page === 1 ? data.results : [...prev, ...data.results],
         );
@@ -189,116 +199,112 @@ function MovieList() {
   }, [movies, isLoading]);
 
   return (
-    <>
-      <PageHeader>
-        <h1>
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            {/* span:문장이나 글자의 일부분만 묶음 */}
-            JONG <span>MOVIE</span>
-          </button>
-        </h1>
-      </PageHeader>
+    <MoviePage>
+      <h2>영확 목록</h2>
+      <RatingFilters>
+        <FilterButton
+          onClick={() => {
+            setMinRating(undefined);
+            setMaxRating(undefined);
+          }}
+        >
+          전체
+        </FilterButton>
 
-      <MoviePage>
-        <h2>영확 목록</h2>
-        <RatingFilters>
-          <FilterButton
-            onClick={() => {
-              setMinRating(undefined);
-              setMaxRating(undefined);
-            }}
-          >
-            전체
-          </FilterButton>
+        <FilterButton
+          onClick={() => {
+            setMinRating(9);
+            setMaxRating(undefined);
+          }}
+        >
+          9점 이상
+        </FilterButton>
 
-          <FilterButton
-            onClick={() => {
-              setMinRating(9);
-              setMaxRating(undefined);
-            }}
-          >
-            9점 이상
-          </FilterButton>
+        <FilterButton
+          onClick={() => {
+            setMinRating(8);
+            setMaxRating(9);
+          }}
+        >
+          8 ~ 9점
+        </FilterButton>
 
-          <FilterButton
-            onClick={() => {
-              setMinRating(8);
-              setMaxRating(9);
-            }}
-          >
-            8 ~ 9점
-          </FilterButton>
+        <FilterButton
+          onClick={() => {
+            setMinRating(7);
+            setMaxRating(8);
+          }}
+        >
+          7 ~ 8점
+        </FilterButton>
 
-          <FilterButton
-            onClick={() => {
-              setMinRating(7);
-              setMaxRating(8);
-            }}
-          >
-            7 ~ 8점
-          </FilterButton>
+        <FilterButton
+          onClick={() => {
+            setMinRating(6);
+            setMaxRating(7);
+          }}
+        >
+          6 ~ 7점
+        </FilterButton>
 
-          <FilterButton
-            onClick={() => {
-              setMinRating(6);
-              setMaxRating(7);
-            }}
+        <FilterButton
+          onClick={() => {
+            setMinRating(undefined);
+            setMaxRating(6);
+          }}
+        >
+          6점 미만
+        </FilterButton>
+      </RatingFilters>
+      <MovieGrid>
+        {movies.map((movie) => (
+          <MovieCard
+            className="movie-card"
+            key={movie.id}
+            to={`/movie/${movie.id}`}
           >
-            6 ~ 7점
-          </FilterButton>
+            <PosterBox>
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={`${movie.title} 포스터`}
+              />
+              <RatingBadge>⭐ {movie.vote_average.toFixed(1)}</RatingBadge>
+            </PosterBox>
 
-          <FilterButton
-            onClick={() => {
-              setMinRating(undefined);
-              setMaxRating(6);
-            }}
-          >
-            6점 미만
-          </FilterButton>
-        </RatingFilters>
-        <MovieGrid>
-          {movies.map((movie) => (
-            <MovieCard
-              className="movie-card"
-              key={movie.id}
-              to={`/movie/${movie.id}`}
-            >
-              <PosterBox>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={`${movie.title} 포스터`}
-                />
-                <RatingBadge>⭐ {movie.vote_average.toFixed(1)}</RatingBadge>
-              </PosterBox>
-
-              <h2>{movie.title}</h2>
-              <p>개봉일: {movie.release_date}</p>
-              <p className="overview">{movie.overview}</p>
-            </MovieCard>
-          ))}
-        </MovieGrid>
-        {/* 무한 스크롤 구현을 위한 임시 불러오기 버튼 */}
-        {/* <button onClick={() => setPage((prev) => prev + 1)}>
+            <h2>{movie.title}</h2>
+            <p>개봉일: {movie.release_date}</p>
+            <p className="overview">{movie.overview}</p>
+          </MovieCard>
+        ))}
+      </MovieGrid>
+      {/* 무한 스크롤 구현을 위한 임시 불러오기 버튼 */}
+      {/* <button onClick={() => setPage((prev) => prev + 1)}>
           다음 영화 불러오기
         </button> */}
-        {isLoading && <p>영화 불러오는 중...</p>}
+      {isLoading && <p>영화 불러오는 중...</p>}
 
-        <div ref={loadMoreRef} style={{ height: "1px" }} />
-      </MoviePage>
-    </>
+      <div ref={loadMoreRef} style={{ height: "1px" }} />
+    </MoviePage>
   );
 }
 
 // 영화 상세 정보 루트
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<MovieList />} />
-      <Route path="/movie/:movieId" element={<MovieDetail />} />
-    </Routes>
+    <>
+      <PageHeader>
+        <h1>
+          <Link to="/">
+            JONG <span>MOVIE</span>
+          </Link>
+        </h1>
+      </PageHeader>
+
+      <Routes>
+        <Route path="/" element={<MovieList />} />
+        <Route path="/movie/:movieId" element={<MovieDetail />} />
+      </Routes>
+    </>
   );
 }
 

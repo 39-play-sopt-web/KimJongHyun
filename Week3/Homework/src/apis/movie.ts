@@ -1,5 +1,6 @@
 import apiClient from "./apiClient";
 
+
 export interface Movie {
   id: number;
   title: string;
@@ -42,8 +43,8 @@ export const getMovies = async (
 };
 
 // 영화 ID를 이용해 상세 정보 가져오기
-export const getMovieDetail = async (movieId: number): Promise<Movie> => {
-  const response = await apiClient.get<Movie>(`/movie/${movieId}`, {
+export const getMovieDetail = async (movieId: number): Promise<MovieDetail> => {
+  const response = await apiClient.get<MovieDetail>(`/movie/${movieId}`, {
     params: {
       language: "ko-KR",
     },
@@ -51,3 +52,36 @@ export const getMovieDetail = async (movieId: number): Promise<Movie> => {
 
   return response.data;
   };
+
+
+
+// 영화 상세 페이지
+  export interface MovieDetail extends Movie {
+  backdrop_path: string | null;
+  runtime: number | null;
+  vote_count: number;
+  status: string;
+  original_title: string;
+  original_language: string;
+  budget: number;
+  revenue: number;
+
+  genres: {
+    id: number;
+    name: string;
+  }[];
+
+  production_countries: {
+    iso_3166_1: string;
+    name: string;
+  }[];
+
+  spoken_languages: {
+    english_name: string;
+    iso_639_1: string;
+    name: string;
+  }[];
+}
+
+
+  
