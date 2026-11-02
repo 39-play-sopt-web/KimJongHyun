@@ -356,7 +356,10 @@ function App() {
     <>
       <PageHeader>
         <h1>
-          <Link to="/">
+          <Link
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
             JONG <span>MOVIE</span>
           </Link>
         </h1>
