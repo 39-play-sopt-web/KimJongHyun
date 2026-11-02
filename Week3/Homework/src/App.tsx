@@ -81,10 +81,27 @@ const MovieCard = styled(Link)`
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  border-radius: 14px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
-  &:hover {
-    transform: translateY(-8px);
+  img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 12px;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      filter 0.2s ease,
+      outline-color 0.2s ease;
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+  }
+
+  h2 {
+    transition: color 0.2s ease;
   }
 
   .overview {
@@ -92,6 +109,26 @@ const MovieCard = styled(Link)`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    color: #d0d0d0;
+    transition: color 0.2s ease;
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+  }
+
+  &:hover img {
+    outline-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+    filter: brightness(1.08);
+  }
+
+  &:hover h2 {
+    color: ${theme.colors.primary};
+  }
+
+  &:hover .overview {
+    color: #ffffff;
   }
 `;
 
@@ -121,14 +158,38 @@ const RatingFilters = styled.div`
 
 const FilterButton = styled.button`
   padding: 12px 20px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 6px;
   background-color: #333;
   color: white;
   cursor: pointer;
 
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  /* 마우스를 올렸을 때 */
   &:hover {
-    background-color: ${theme.colors.primary};
+    background-color: #444;
+    border-color: #777;
+  }
+
+  /* 현재 선택된 필터 */
+  &[aria-pressed="true"] {
+    background-color: #502727;
+    border-color: ${theme.colors.primary};
+    font-weight: 600;
+  }
+
+  /* 선택된 상태에서 마우스를 올려도 유지 */
+  &[aria-pressed="true"]:hover {
+    background-color: #502727;
+  }
+
+  /* 키보드로 선택할 때 */
+  &:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
   }
 `;
 
@@ -147,6 +208,8 @@ function MovieList() {
 
   // 평점 필터 변경 시 영화 목록과 페이지 초기화
   const changeRating = (min?: number, max?: number) => {
+    // 이미 선택된 필터라면 다시 요청하지 않음
+    if (minRating === min && maxRating === max) return;
     setMinRating(min);
     setMaxRating(max);
     setPage(1);
@@ -209,56 +272,52 @@ function MovieList() {
   return (
     <MoviePage>
       <h2>영확 목록</h2>
+
+      {/* 버튼 선택 상태 연결   */}
       <RatingFilters>
         <FilterButton
-          onClick={() => {
-            setMinRating(undefined);
-            setMaxRating(undefined);
-          }}
+          aria-pressed={minRating === undefined && maxRating === undefined}
+          onClick={() => changeRating()}
         >
           전체
         </FilterButton>
 
-        <FilterButton onClick={() => changeRating(9, undefined)}>
+        <FilterButton
+          aria-pressed={minRating === 9 && maxRating === undefined}
+          onClick={() => changeRating(9)}
+        >
           9점 이상
         </FilterButton>
 
         <FilterButton
-          onClick={() => {
-            setMinRating(8);
-            setMaxRating(9);
-          }}
+          aria-pressed={minRating === 8 && maxRating === 9}
+          onClick={() => changeRating(8, 9)}
         >
           8 ~ 9점
         </FilterButton>
 
         <FilterButton
-          onClick={() => {
-            setMinRating(7);
-            setMaxRating(8);
-          }}
+          aria-pressed={minRating === 7 && maxRating === 8}
+          onClick={() => changeRating(7, 8)}
         >
           7 ~ 8점
         </FilterButton>
 
         <FilterButton
-          onClick={() => {
-            setMinRating(6);
-            setMaxRating(7);
-          }}
+          aria-pressed={minRating === 6 && maxRating === 7}
+          onClick={() => changeRating(6, 7)}
         >
           6 ~ 7점
         </FilterButton>
 
         <FilterButton
-          onClick={() => {
-            setMinRating(undefined);
-            setMaxRating(6);
-          }}
+          aria-pressed={minRating === undefined && maxRating === 6}
+          onClick={() => changeRating(undefined, 6)}
         >
           6점 미만
         </FilterButton>
       </RatingFilters>
+
       <MovieGrid>
         {movies.map((movie) => (
           <MovieCard
