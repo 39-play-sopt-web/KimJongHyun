@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import style from "./GameBoard.module.css";
 import GameModal from "./GameModal";
+import { shuffle } from "../utils/shuffle";
 
 // usestate: 숫자 배열 기억, 시간 기억
 // useref: 게임 시작 시각을 기억
@@ -20,9 +21,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
   // );
 
   const [numbers, setNumbers] = useState(() =>
-    Array.from({ length: cellCount }, (_, i) => i + 1).sort(
-      () => Math.random() - 0.5,
-    ),
+    shuffle(Array.from({ length: cellCount }, (_, i) => i + 1)),
   );
 
   // 나중에 나올 숫자 : 10~18
@@ -31,9 +30,7 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
   // );
 
   const [remainingNumbers, setRemainingNumbers] = useState(() =>
-    Array.from({ length: cellCount }, (_, i) => i + cellCount + 1).sort(
-      () => Math.random() - 0.5,
-    ),
+    shuffle(Array.from({ length: cellCount }, (_, i) => i + cellCount + 1)),
   );
 
   // nextNumber = 지금 눌러야 하는 정답 숫자
@@ -117,14 +114,10 @@ const GameBoard = ({ gameTime, setGameTime, level }) => {
   // 게임 다시 시작하기
   const restartGame = () => {
     setNumbers(
-      Array.from({ length: cellCount }, (_, i) => i + 1).sort(
-        () => Math.random() - 0.5,
-      ),
+      shuffle(Array.from({ length: cellCount }, (_, i) => i + 1)),
     );
     setRemainingNumbers(
-      Array.from({ length: cellCount }, (_, i) => i + cellCount + 1).sort(
-        () => Math.random() - 0.5,
-      ),
+      shuffle(Array.from({ length: cellCount }, (_, i) => i + cellCount + 1)),
     );
 
     setNextNumber(1);
