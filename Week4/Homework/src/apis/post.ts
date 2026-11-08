@@ -25,3 +25,19 @@ export const getPosts = async (keyword: string) => {
   });
   return response.data.data;
 };
+
+
+export interface CreatePostRequest {
+  title: string;
+  content: string;
+  author: string;
+}
+
+export const createPost = async (body: CreatePostRequest) => {
+  const response = await apiClient.post<ApiResponse<Post>>("/posts", body, {
+    headers: {
+      Authorization: localStorage.getItem("authorizationCode"),
+    },
+  });
+  return response.data.data;
+};
