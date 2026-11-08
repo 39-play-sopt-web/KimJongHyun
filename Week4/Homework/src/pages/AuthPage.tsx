@@ -14,6 +14,7 @@ function AuthPage() {
     mutationFn: postAuthorizationCode,
     onSuccess: (result) => {
       localStorage.setItem("authorizationCode", result.authorizationCode);
+      localStorage.setItem("part", part);
     },
   });
 
