@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { postAuthorizationCode, type Part } from "../apis/member";
 import { theme } from "../styles/theme";
@@ -44,7 +44,11 @@ const IssueButton = styled.button`
   }
 `;
 
-const ListLink = styled(Link)`
+const ListButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
+  text-decoration: underline;
   text-align: center;
   color: ${theme.colors.primary};
 `;
@@ -53,6 +57,14 @@ function AuthPage() {
   // 심화과제: 미선택 상태("")를 표현하기 위해 Part 또는 빈 문자열
   const [part, setPart] = useState<Part | "">("");
   const navigate = useNavigate();
+
+  const goToList = () => {
+    if (!localStorage.getItem("authorizationCode")) {
+      alert("먼저 파트를 선택하고 코드를 발급받아 주세요.");
+      return;
+    }
+    navigate("/posts");
+  };
 
   const { mutate, isPending, isError } = useMutation({
     mutationFn: postAuthorizationCode,
@@ -82,7 +94,10 @@ function AuthPage() {
         {isPending ? "발급 중..." : "코드 발급"}
       </IssueButton>
       {isError && <p>발급에 실패했어요.</p>}
-      <ListLink to="/posts">게시글 목록으로</ListLink>
+      {/* 참고 구현과 동일하게 코드 없으면 목록도 막고 안내 */}
+      <ListButton type="button" onClick={goToList}>
+        게시글 목록으로
+      </ListButton>
     </Page>
   );
 }

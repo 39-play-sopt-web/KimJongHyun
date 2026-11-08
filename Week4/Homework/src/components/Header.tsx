@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { theme } from "../styles/theme";
 
@@ -37,6 +37,12 @@ const Nav = styled.nav`
   button:hover {
     opacity: 0.7;
   }
+
+  /* NavLink가 현재 주소와 일치하면 active 클래스를 붙여 줌 */
+  a.active {
+    font-weight: 700;
+    text-decoration: underline;
+  }
 `;
 
 function Header() {
@@ -52,10 +58,10 @@ function Header() {
 
   return (
     <Bar>
-      <PartLabel>{part}</PartLabel>
+      <PartLabel>{part}&apos;S TORY</PartLabel>
       <Nav>
-        <Link to="/posts">게시글 목록</Link>
-        <Link to="/posts/new">글쓰기</Link>
+        <NavLink to="/posts" end>게시글 목록</NavLink>
+        <NavLink to="/posts/new">글쓰기</NavLink>
         <button onClick={handleLogout}>로그아웃</button>
       </Nav>
     </Bar>
