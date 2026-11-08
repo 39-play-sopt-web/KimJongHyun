@@ -65,3 +65,11 @@ export const updatePost = async (postId: number, body: UpdatePostRequest) => {
   );
   return response.data.data;
 };
+
+export const deletePost = async (postId: number) => {
+  await apiClient.delete(`/posts/${postId}`, {
+    headers: {
+      Authorization: localStorage.getItem("authorizationCode"),
+    },
+  });
+};

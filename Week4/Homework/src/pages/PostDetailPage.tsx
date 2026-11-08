@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import styled from "@emotion/styled";
-import { getPost, updatePost } from "../apis/post";
+import { getPost, updatePost, deletePost } from "../apis/post";
 import { theme } from "../styles/theme";
 
 const Page = styled.main`
@@ -89,6 +89,7 @@ function PostDetailPage() {
   const id = Number(postId);
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // 수정 모드 여부와, 수정 중인 입력값
   const [isEditing, setIsEditing] = useState(false);
@@ -100,6 +101,23 @@ function PostDetailPage() {
     queryKey: ["post", id],
     queryFn: () => getPost(id),
   });
+
+  const { mutate: remove, isPending: isDeleting } = useMutation({
+    mutationFn: () => deletePost(id),
+    onSuccess: () => {
+      // 삭제된 글은 목록에서도 빠져야 하니 목록 캐시 갱신
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      alert("삭제되었습니다.");
+      navigate("/posts");
+    },
+    onError: () => {
+      alert("삭제에 실패했습니다.");
+    },
+  });
+
+  const handleDelete = () => {
+    if (confirm("정말 삭제할까요?")) remove();
+  };
 
   const { mutate, isPending: isUpdating } = useMutation({
     mutationFn: (body: { title: string; content: string }) =>
@@ -162,6 +180,9 @@ function PostDetailPage() {
             <p className="content">{post.content}</p>
             <ButtonRow>
               <button onClick={startEdit}>수정</button>
+              <button onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? "삭제 중..." : "삭제"}
+              </button>
             </ButtonRow>
           </>
         )}
