@@ -50,7 +50,8 @@ const ListLink = styled(Link)`
 `;
 
 function AuthPage() {
-  const [part, setPart] = useState<Part>("WEB");
+  // 심화과제: 미선택 상태("")를 표현하기 위해 Part 또는 빈 문자열
+  const [part, setPart] = useState<Part | "">("");
   const navigate = useNavigate();
 
   const { mutate, isPending, isError } = useMutation({
@@ -66,13 +67,18 @@ function AuthPage() {
     <Page>
       <h1>회원 코드 발급</h1>
       <Select value={part} onChange={(e) => setPart(e.target.value as Part)}>
+        <option value="">파트를 선택하세요</option>
         {PARTS.map((p) => (
           <option key={p} value={p}>
             {p}
           </option>
         ))}
       </Select>
-      <IssueButton onClick={() => mutate(part)} disabled={isPending}>
+      {/* 파트 미선택 시 버튼 비활성화 */}
+      <IssueButton
+        onClick={() => part && mutate(part)}
+        disabled={!part || isPending}
+      >
         {isPending ? "발급 중..." : "코드 발급"}
       </IssueButton>
       {isError && <p>발급에 실패했어요.</p>}
