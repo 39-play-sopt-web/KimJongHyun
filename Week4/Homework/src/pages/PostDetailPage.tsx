@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { getPost, updatePost, deletePost } from "../apis/post";
 import { theme } from "../styles/theme";
+import { formatDate } from "../utils/formatDate";
 
 const Page = styled.main`
   max-width: 700px;
@@ -175,7 +176,7 @@ function PostDetailPage() {
           <>
             <h1>{post.title}</h1>
             <p className="meta">
-              {post.author} · {new Date(post.createdAt).toLocaleDateString()}
+              {post.author} · {formatDate(post.createdAt)}
             </p>
             <p className="content">{post.content}</p>
             <ButtonRow>

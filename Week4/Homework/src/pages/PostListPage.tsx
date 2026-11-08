@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import styled from "@emotion/styled";
 import { getPosts } from "../apis/post";
+import { formatDate } from "../utils/formatDate";
 import { theme } from "../styles/theme";
 
 const Page = styled.main`
@@ -64,8 +65,25 @@ const Card = styled(Link)`
     margin-bottom: 8px;
   }
 
-  p {
+  .preview {
     color: #555;
+    margin-bottom: 12px;
+    // 본문 미리보기는 한 줄만, 넘치면 ...
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .meta {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    color: #777;
+  }
+
+  .author {
+    color: ${theme.colors.primary};
+    font-weight: bold;
   }
 `;
 
@@ -116,7 +134,11 @@ function PostListPage() {
             <li key={post.id}>
               <Card to={`/posts/${post.id}`}>
                 <h2>{post.title}</h2>
-                <p>{post.author}</p>
+                <p className="preview">{post.content}</p>
+                <p className="meta">
+                  <span className="author">{post.author}</span>
+                  <span>{formatDate(post.createdAt)}</span>
+                </p>
               </Card>
             </li>
           ))}
