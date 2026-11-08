@@ -1,5 +1,7 @@
+import AuthPage from "./pages/AuthPage";
+
 function App() {
-  return <div>PLAY SOPT 게시판</div>;
+  return <AuthPage />;
 }
 
 export default App;
