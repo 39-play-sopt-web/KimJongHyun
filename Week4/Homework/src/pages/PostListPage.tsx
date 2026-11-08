@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import styled from "@emotion/styled";
 import { getPosts } from "../apis/post";
@@ -98,10 +98,38 @@ function PostListPage() {
   const [inputValue, setInputValue] = useState("");
   const [keyword, setKeyword] = useState("");
 
-  const { data, isPending, isError } = useQuery({
-    queryKey: ["posts", keyword],
-    queryFn: () => getPosts(keyword),
-  });
+  // 심화과제: 무한스크롤. useQuery → useInfiniteQuery
+  // 3주차엔 page state + 응답 이어붙이기 + hasMore를 직접 관리했는데, 여기선 라이브러리가 대신함
+  // 커서가 뭐냐 글이 100개 있다고 하면 2페이지 주세요가 아닌 id 83부터 주세요 라고 요청함. 이 83이 바로 커서다. 이 id를 기억했다가 다음 요청에 붙이는거
+  const { data, isPending, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["posts", keyword],
+      // pageParam = 이번 페이지를 요청할 때 쓸 cursor. 첫 페이지는 initialPageParam
+      queryFn: ({ pageParam }) => getPosts(keyword, pageParam),
+      initialPageParam: undefined as number | undefined,
+      // 방금 받은 페이지를 보고 다음 cursor를 정한다. 더 돌려줄 페이지가 없으면? undefined
+      getNextPageParam: (lastPage) =>
+        lastPage.hasNext ? lastPage.nextCursor : undefined,
+    });
+
+  // 3주차 loadMoreRef와 같은 역할. 목록 맨 아래 감시용 div
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  // IntersectionObserver: 감시 div가 화면에 보이면 다음 페이지 요청
+  useEffect(() => {
+    const target = loadMoreRef.current;
+    if (!target || !hasNextPage) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      // 이미 가져오는 중이면 중복 요청 방지 (3주차 리뷰받었던 부분이고)
+      if (entry.isIntersecting && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
  // form 기본 동작(새로고침) 막기 
   const handleSearch = (e: React.FormEvent) => {
@@ -130,7 +158,8 @@ function PostListPage() {
 
       {data && (
         <CardList>
-          {data.posts.map((post) => (
+          {/* data.pages = 페이지 배열. flatMap으로 글 하나의 배열로 펼침 */}
+          {data.pages.flatMap((page) => page.posts).map((post) => (
             <li key={post.id}>
               <Card to={`/posts/${post.id}`}>
                 <h2>{post.title}</h2>
@@ -144,6 +173,10 @@ function PostListPage() {
           ))}
         </CardList>
       )}
+
+      {isFetchingNextPage && <p>더 불러오는 중...</p>}
+      {/* 감시 대상. 이게 화면에 들어오면 다음 페이지 */}
+      <div ref={loadMoreRef} style={{ height: "1px" }} />
     </Page>
   );
 }

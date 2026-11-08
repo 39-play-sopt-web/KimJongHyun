@@ -19,9 +19,10 @@ interface PostListData {
   hasNext: boolean;
 }
 
-export const getPosts = async (keyword: string) => {
+// cursor: 이 글 id 이후부터 달라는 뜻. 첫 페이지는 undefined(안 보냄)
+export const getPosts = async (keyword: string, cursor?: number) => {
   const response = await apiClient.get<ApiResponse<PostListData>>("/posts", {
-    params: { keyword },
+    params: { keyword, cursor },
   });
   return response.data.data;
 };
