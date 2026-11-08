@@ -1,7 +1,8 @@
 import { useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 
-// 라우트 가드: 인증 코드가 없으면 alert 후 발급 페이지로 돌려보낸다
+// 라우트 가드: 라우트(route)주소 앞을 지키는 경비다. 문지기지
+// 인증 코드가 없으면 alert 후 발급 페이지로 돌려보낸다
 // children = 이 컴포넌트로 감싼 페이지 (코드가 있을 때만 그려짐)
 function RequireAuth({ children }: { children: ReactNode }) {
   const navigate = useNavigate();

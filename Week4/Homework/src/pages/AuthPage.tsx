@@ -25,7 +25,7 @@ const Select = styled.select`
   border: 1px solid ${theme.colors.primary};
 `;
 
-// 명세: hover 시 배경색 변경 + transition
+// hover 시 배경색 변경 + transition
 const IssueButton = styled.button`
   padding: 12px;
   border: none;
