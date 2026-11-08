@@ -117,6 +117,7 @@ function PostDetailPage() {
   });
 
   const handleDelete = () => {
+    if (!ensureAuth()) return;
     if (confirm("정말 삭제할까요?")) remove();
   };
 
@@ -136,8 +137,16 @@ function PostDetailPage() {
   });
 
   // 수정 버튼 클릭 시 기존 제목·본문을 Input에 채움
+  // 심화: 수정·삭제 전에 코드 확인. 없으면 alert 후 발급 페이지로
+  const ensureAuth = () => {
+    if (localStorage.getItem("authorizationCode")) return true;
+    alert("회원 코드 발급이 필요합니다.");
+    navigate("/");
+    return false;
+  };
+
   const startEdit = () => {
-    if (!post) return;
+    if (!ensureAuth() || !post) return;
     setTitle(post.title);
     setContent(post.content);
     setIsEditing(true);
