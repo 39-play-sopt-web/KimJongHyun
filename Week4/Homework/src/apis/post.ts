@@ -41,3 +41,27 @@ export const createPost = async (body: CreatePostRequest) => {
   });
   return response.data.data;
 };
+
+export const getPost = async (postId: number) => {
+  const response = await apiClient.get<ApiResponse<Post>>(`/posts/${postId}`);
+  return response.data.data;
+};
+
+// API 문서: 수정은 title, content만. author는 못 바꿈
+export interface UpdatePostRequest {
+  title: string;
+  content: string;
+}
+
+export const updatePost = async (postId: number, body: UpdatePostRequest) => {
+  const response = await apiClient.put<ApiResponse<Post>>(
+    `/posts/${postId}`,
+    body,
+    {
+      headers: {
+        Authorization: localStorage.getItem("authorizationCode"),
+      },
+    },
+  );
+  return response.data.data;
+};
