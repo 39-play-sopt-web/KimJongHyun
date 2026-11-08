@@ -10,12 +10,18 @@ const Bar = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  background-color: ${theme.colors.primary};
-  color: #ffffff;
+  background-color: ${theme.colors.surface};
+  border-bottom: 1px solid ${theme.colors.border};
+  color: ${theme.colors.text};
+  position: sticky;
+  top: 0;
+  z-index: 10;
 `;
 
 const PartLabel = styled.span`
-  font-weight: bold;
+  font-weight: 700;
+  color: ${theme.colors.primary};
+  letter-spacing: 0.04em;
 `;
 
 const Nav = styled.nav`
@@ -25,23 +31,23 @@ const Nav = styled.nav`
 
   a,
   button {
-    color: #ffffff;
+    color: ${theme.colors.textMuted};
     text-decoration: none;
     background: none;
     border: none;
     font-size: 15px;
-    transition: opacity 0.2s ease;
+    transition: color 0.2s ease;
   }
 
   a:hover,
   button:hover {
-    opacity: 0.7;
+    color: ${theme.colors.text};
   }
 
   /* NavLink가 현재 주소와 일치하면 active 클래스를 붙여 줌 */
   a.active {
+    color: ${theme.colors.primary};
     font-weight: 700;
-    text-decoration: underline;
   }
 `;
 

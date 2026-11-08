@@ -12,34 +12,46 @@ const PARTS: Part[] = ["WEB", "iOS", "ANDROID"];
 
 const Page = styled.main`
   max-width: 400px;
-  margin: 80px auto;
-  padding: 24px;
+  margin: 120px auto;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background-color: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.border};
+  border-radius: ${theme.radius};
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
 `;
 
 const Select = styled.select`
   padding: 10px;
-  border-radius: 6px;
-  border: 1px solid ${theme.colors.primary};
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.border};
+    outline: none;
+    &:focus { border-color: ${theme.colors.primary}; }
 `;
 
 // hover 시 배경색 변경 + transition
 const IssueButton = styled.button`
   padding: 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: ${theme.colors.primary};
-  color: #ffffff;
+  color: ${theme.colors.onPrimary};
+  font-weight: 600;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #2b2a8f;
+    background-color: ${theme.colors.primaryHover};
   }
 
   &:disabled {
-    background-color: #888;
+    background-color: ${theme.colors.disabled};
+    color: ${theme.colors.textMuted};
     cursor: not-allowed;
   }
 `;

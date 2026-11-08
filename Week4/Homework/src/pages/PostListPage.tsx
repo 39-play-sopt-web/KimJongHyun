@@ -20,20 +20,24 @@ const SearchForm = styled.form`
   input {
     flex: 1;
     padding: 10px;
-    border-radius: 6px;
-    border: 1px solid ${theme.colors.primary};
+    border-radius: 8px;
+    border: 1px solid ${theme.colors.border};
+    outline: none;
+    &:focus { border-color: ${theme.colors.primary}; }
   }
 
   button {
     padding: 10px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: ${theme.colors.primary};
-    color: #ffffff;
+    color: ${theme.colors.onPrimary};
+    font-weight: 600;
     transition: background-color 0.2s ease;
 
     &:disabled {
-      background-color: #888;
+      background-color: ${theme.colors.disabled};
+    color: ${theme.colors.textMuted};
       cursor: not-allowed;
     }
   }
@@ -50,14 +54,20 @@ const CardList = styled.ul`
 const Card = styled(Link)`
   display: block;
   padding: 16px;
-  border-radius: 8px;
-  background-color: #ffffff;
+  border-radius: ${theme.radius};
+  background-color: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.border};
   color: ${theme.colors.text};
   text-decoration: none;
-  transition: transform 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
+    background-color: ${theme.colors.surfaceHover};
+    border-color: ${theme.colors.primary};
   }
 
   h2 {
@@ -66,7 +76,7 @@ const Card = styled(Link)`
   }
 
   .preview {
-    color: #555;
+    color: ${theme.colors.textMuted};
     margin-bottom: 12px;
     // 본문 미리보기는 한 줄만, 넘치면 ...
     white-space: nowrap;
@@ -78,7 +88,7 @@ const Card = styled(Link)`
     display: flex;
     gap: 12px;
     font-size: 14px;
-    color: #777;
+    color: ${theme.colors.textMuted};
   }
 
   .author {

@@ -13,7 +13,8 @@ const Page = styled.main`
 `;
 
 const Article = styled.article`
-  background-color: #ffffff;
+  background-color: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.border};
   border-radius: 8px;
   padding: 24px;
   margin-top: 16px;
@@ -24,7 +25,7 @@ const Article = styled.article`
   }
 
   .meta {
-    color: #777;
+    color: ${theme.colors.textMuted};
     font-size: 14px;
     margin-bottom: 20px;
   }
@@ -43,8 +44,10 @@ const EditForm = styled.form`
   input,
   textarea {
     padding: 10px;
-    border-radius: 6px;
-    border: 1px solid ${theme.colors.primary};
+    border-radius: 8px;
+    border: 1px solid ${theme.colors.border};
+    outline: none;
+    &:focus { border-color: ${theme.colors.primary}; }
     font-family: inherit;
   }
 
@@ -62,17 +65,19 @@ const ButtonRow = styled.div`
   button {
     padding: 10px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: ${theme.colors.primary};
-    color: #ffffff;
+    color: ${theme.colors.onPrimary};
+    font-weight: 600;
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: #2b2a8f;
+      background-color: ${theme.colors.primaryHover};
     }
 
     &:disabled {
-      background-color: #888;
+      background-color: ${theme.colors.disabled};
+    color: ${theme.colors.textMuted};
       cursor: not-allowed;
     }
   }

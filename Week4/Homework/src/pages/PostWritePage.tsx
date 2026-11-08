@@ -16,7 +16,7 @@ const Page = styled.main`
 
 const StepLabel = styled.p`
   margin-top: 8px;
-  color: #555;
+  color: ${theme.colors.textMuted};
 `;
 
 const Form = styled.form`
@@ -28,8 +28,10 @@ const Form = styled.form`
   input,
   textarea {
     padding: 10px;
-    border-radius: 6px;
-    border: 1px solid ${theme.colors.primary};
+    border-radius: 8px;
+    border: 1px solid ${theme.colors.border};
+    outline: none;
+    &:focus { border-color: ${theme.colors.primary}; }
     font-family: inherit;
   }
 
@@ -42,23 +44,25 @@ const Form = styled.form`
 const Hint = styled.p<{ error?: boolean }>`
   font-size: 14px;
   text-align: right;
-  color: ${({ error }) => (error ? "#d33" : "#777")};
+  color: ${({ error }) => (error ? theme.colors.danger : theme.colors.textMuted)};
 `;
 
 const SubmitButton = styled.button`
   padding: 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: ${theme.colors.primary};
-  color: #ffffff;
+  color: ${theme.colors.onPrimary};
+  font-weight: 600;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #2b2a8f;
+    background-color: ${theme.colors.primaryHover};
   }
 
   &:disabled {
-    background-color: #888;
+    background-color: ${theme.colors.disabled};
+    color: ${theme.colors.textMuted};
     cursor: not-allowed;
   }
 `;

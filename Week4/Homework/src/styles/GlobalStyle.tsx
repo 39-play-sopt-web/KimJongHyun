@@ -9,9 +9,28 @@ const globalStyles = css`
   }
 
   body {
-    font-family: system-ui, sans-serif;
+    font-family: "Pretendard", system-ui, -apple-system, sans-serif;
     background-color: ${theme.colors.background};
     color: ${theme.colors.text};
+    line-height: 1.5;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    font-size: 15px;
+    color: ${theme.colors.text};
+    background-color: ${theme.colors.surface};
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: ${theme.colors.textMuted};
+  }
+
+  a {
+    color: inherit;
   }
 
   button {
