@@ -19,7 +19,9 @@ interface PostListData {
   hasNext: boolean;
 }
 
-export const getPosts = async () => {
-  const response = await apiClient.get<ApiResponse<PostListData>>("/posts");
+export const getPosts = async (keyword: string) => {
+  const response = await apiClient.get<ApiResponse<PostListData>>("/posts", {
+    params: { keyword },
+  });
   return response.data.data;
 };

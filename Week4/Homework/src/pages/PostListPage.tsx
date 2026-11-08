@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import styled from "@emotion/styled";
@@ -8,6 +9,33 @@ const Page = styled.main`
   max-width: 800px;
   margin: 0 auto;
   padding: 24px;
+`;
+
+const SearchForm = styled.form`
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 24px;
+
+  input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid ${theme.colors.primary};
+  }
+
+  button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: ${theme.colors.primary};
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+
+    &:disabled {
+      background-color: #888;
+      cursor: not-allowed;
+    }
+  }
 `;
 
 const CardList = styled.ul`
@@ -47,27 +75,53 @@ const Card = styled(Link)`
 // 3주차 minrating, maxrating과 같은 의존성 배열로 재요청하던 역할을 이 친구가 대신하는거
 
 function PostListPage() {
+  // inputValue: 타이핑 중인 글자. keyword: 검색 버튼을 눌러 확정된 검색어
+  // 둘을 나눠야 글자 칠 때마다 요청이 나가지 않는다 ( inputValue / postId 와 같은 구조)
+  const [inputValue, setInputValue] = useState("");
+  const [keyword, setKeyword] = useState("");
+
   const { data, isPending, isError } = useQuery({
-    queryKey: ["posts"],
-    queryFn: getPosts,
+    queryKey: ["posts", keyword],
+    queryFn: () => getPosts(keyword),
   });
 
-  if (isPending) return <Page>불러오는 중...</Page>;
-  if (isError) return <Page>목록을 불러오지 못했어요.</Page>;
+ // form 기본 동작(새로고침) 막기 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault(); 
+    setKeyword(inputValue);
+  };
 
   return (
     <Page>
       <h1>게시글 목록</h1>
-      <CardList>
-        {data.posts.map((post) => (
-          <li key={post.id}>
-            <Card to={`/posts/${post.id}`}>
-              <h2>{post.title}</h2>
-              <p>{post.author}</p>
-            </Card>
-          </li>
-        ))}
-      </CardList>
+
+      <SearchForm onSubmit={handleSearch}>
+        <input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="제목 검색"
+        />
+        {/* Input이 비어있으면 검색 버튼 비활성화 */}
+        <button type="submit" disabled={inputValue.trim() === ""}>
+          검색
+        </button>
+      </SearchForm>
+
+      {isPending && <p>불러오는 중...</p>}
+      {isError && <p>목록을 불러오지 못했어요.</p>}
+
+      {data && (
+        <CardList>
+          {data.posts.map((post) => (
+            <li key={post.id}>
+              <Card to={`/posts/${post.id}`}>
+                <h2>{post.title}</h2>
+                <p>{post.author}</p>
+              </Card>
+            </li>
+          ))}
+        </CardList>
+      )}
     </Page>
   );
 }
