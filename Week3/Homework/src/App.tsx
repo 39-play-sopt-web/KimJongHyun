@@ -225,6 +225,18 @@ const ErrorMessage = styled.p`
   }
 `;
 
+// 평점 필터 목록. min은 이상(포함), max는 미만(미포함)
+// 리뷰 반영: 이전엔 8~9점(lte 9)과 9점 이상(gte 9)에 9.0이 둘 다 들어가고, 6점 미만(lte 6)에 6.0이 포함됐음
+// max를 "미만"으로 통일하고 실제 요청에서 경계를 빼는 건 getMovies가 담당
+const RATING_FILTERS: { label: string; min?: number; max?: number }[] = [
+  { label: "전체" },
+  { label: "9점 이상", min: 9 },
+  { label: "8 ~ 9점", min: 8, max: 9 },
+  { label: "7 ~ 8점", min: 7, max: 8 },
+  { label: "6 ~ 7점", min: 6, max: 7 },
+  { label: "6점 미만", max: 6 },
+];
+
 function MovieList() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [minRating, setMinRating] = useState<number>();
@@ -341,47 +353,16 @@ function MovieList() {
 
       {/* 버튼 선택 상태 연결   */}
       <RatingFilters>
-        <FilterButton
-          aria-pressed={minRating === undefined && maxRating === undefined}
-          onClick={() => changeRating()}
-        >
-          전체
-        </FilterButton>
-
-        <FilterButton
-          aria-pressed={minRating === 9 && maxRating === undefined}
-          onClick={() => changeRating(9)}
-        >
-          9점 이상
-        </FilterButton>
-
-        <FilterButton
-          aria-pressed={minRating === 8 && maxRating === 9}
-          onClick={() => changeRating(8, 9)}
-        >
-          8 ~ 9점
-        </FilterButton>
-
-        <FilterButton
-          aria-pressed={minRating === 7 && maxRating === 8}
-          onClick={() => changeRating(7, 8)}
-        >
-          7 ~ 8점
-        </FilterButton>
-
-        <FilterButton
-          aria-pressed={minRating === 6 && maxRating === 7}
-          onClick={() => changeRating(6, 7)}
-        >
-          6 ~ 7점
-        </FilterButton>
-
-        <FilterButton
-          aria-pressed={minRating === undefined && maxRating === 6}
-          onClick={() => changeRating(undefined, 6)}
-        >
-          6점 미만
-        </FilterButton>
+        {/* 리뷰 반영: 버튼 6개가 같은 코드의 반복이라 상수 배열 + map으로. 필터 추가 = RATING_FILTERS에 한 줄 추가 */}
+        {RATING_FILTERS.map(({ label, min, max }) => (
+          <FilterButton
+            key={label}
+            aria-pressed={minRating === min && maxRating === max}
+            onClick={() => changeRating(min, max)}
+          >
+            {label}
+          </FilterButton>
+        ))}
       </RatingFilters>
 
       <MovieGrid>

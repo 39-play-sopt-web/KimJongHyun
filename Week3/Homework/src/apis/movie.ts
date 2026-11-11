@@ -24,6 +24,9 @@ export interface MovieResponse {
 // vote_average.lte	평점이 특정 값 이하
 
 
+// 평점을 신뢰할 수 있는 최소 투표 수
+const MIN_VOTE_COUNT = 100;
+
 export const getMovies = async (
   minRating?: number,
   maxRating?: number,
@@ -34,7 +37,12 @@ export const getMovies = async (
     params: {
       language: "ko-KR",
       "vote_average.gte": minRating,
-      "vote_average.lte": maxRating,
+      // 리뷰 반영: TMDB의 lte는 "이하"라 maxRating이 9면 9.0이 포함됨
+      // 화면은 "미만"으로 쓰고 있으니 아주 작은 값을 빼서 경계가 겹치지 않게 함
+      "vote_average.lte":
+        maxRating === undefined ? undefined : maxRating - 0.001,
+      // 리뷰 반영: 투표 1~2개짜리 영화가 "9점 이상"에 몰리는 걸 막기 위한 최소 투표 수
+      "vote_count.gte": MIN_VOTE_COUNT,
       page,
     },
   });
