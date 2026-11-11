@@ -5,7 +5,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import { getMovies, type Movie } from "./apis/movie";
-import "./App.css";
 import styled from "@emotion/styled";
 import { theme } from "./styles/theme";
 
@@ -368,7 +367,6 @@ function MovieList() {
       <MovieGrid>
         {movies.map((movie) => (
           <MovieCard
-            className="movie-card"
             key={movie.id}
             to={`/movie/${movie.id}`}
           >

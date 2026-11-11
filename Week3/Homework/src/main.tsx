@@ -9,7 +9,6 @@ import { BrowserRouter } from "react-router";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./styles/theme";
 
-// import "./index.css"; 기존 css 주석처리
 import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
