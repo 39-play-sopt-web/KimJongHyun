@@ -19,6 +19,12 @@ function MovieDetail() {
   // 4. 정보 카드 6개 : .info-grid 안에 <div> 6개
   // 5. 카드 3개씩 정렬 css display: grid
 
+  // 리뷰 반영: 목록을 많이 내린 상태에서 들어오면 브라우저가 스크롤 위치를 유지해서
+  // 상세 페이지가 중간부터 보임. 영화가 바뀔 때마다 맨 위로 올려줌
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [movieId]);
+
   // URL의 영화 ID를 이용해 상세 정보 요청
   useEffect(() => {
     if (!movieId) return;

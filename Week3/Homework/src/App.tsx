@@ -137,6 +137,19 @@ const PosterBox = styled.div`
   position: relative;
 `;
 
+// 포스터가 없는 영화의 대체 화면. 카드 높이가 흔들리지 않게 포스터 비율(2:3) 유지
+const NoPoster = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  border-radius: 12px;
+  background-color: #2a2f3f;
+  color: #aaa;
+  font-size: 14px;
+`;
+
 // 포스터 오른쪽 위에 표시할 평점
 const RatingBadge = styled.span`
   position: absolute;
@@ -379,10 +392,15 @@ function MovieList() {
             to={`/movie/${movie.id}`}
           >
             <PosterBox>
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={`${movie.title} 포스터`}
-              />
+              {/* 리뷰 반영: poster_path가 null이면 주소가 .../w500null이 되어 깨진 이미지가 보임. 상세 페이지처럼 대체 화면 표시 */}
+              {movie.poster_path ? (
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={`${movie.title} 포스터`}
+                />
+              ) : (
+                <NoPoster>포스터 없음</NoPoster>
+              )}
               <RatingBadge>⭐ {movie.vote_average.toFixed(1)}</RatingBadge>
             </PosterBox>
 
