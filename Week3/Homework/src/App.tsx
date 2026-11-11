@@ -193,6 +193,25 @@ const FilterButton = styled.button`
   }
 `;
 
+// 요청 실패 안내 + 다시 시도 버튼
+const ErrorMessage = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 0;
+  color: #aaa;
+
+  button {
+    padding: 6px 12px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+`;
+
 function MovieList() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [minRating, setMinRating] = useState<number>();
@@ -201,8 +220,11 @@ function MovieList() {
   // 무한 스크롤 구현하기 위한 usestate 추가
   // 단순 page만 있어도 구현은 되는데 반복 요청, 불필요한 요청없이 안정적으로 작동하도록 도와줌
   const [page, setPage] = useState(1);
-  // const [hasMore, setHasMore] = useState(true);
+  // 리뷰 반영: 마지막 페이지 도착 여부. false면 observer를 더 이상 연결하지 않음
+  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  // 리뷰 반영: 요청 실패 여부. 첫 페이지 실패(전체 에러)와 다음 페이지 실패(하단 에러)를 구분
+  const [isError, setIsError] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -214,14 +236,25 @@ function MovieList() {
     setMaxRating(max);
     setPage(1);
     setMovies([]);
+    // 필터가 바뀌면 다시 처음부터 조회할 수 있어야 하니 초기화
+    setHasMore(true);
+    setIsError(false);
   };
 
   useEffect(() => {
+    // 리뷰 반영: 상세 페이지와 같은 cancelled 플래그
+    // 필터를 빠르게 바꾸면 이전 요청의 응답이 늦게 도착해 새 목록을 덮어쓸 수 있어서,
+    // cleanup에서 cancelled = true로 만들고 응답이 와도 무시한다
+    let cancelled = false;
+
     const fetchMovies = async () => {
       setIsLoading(true);
+      setIsError(false);
 
       try {
         const data = await getMovies(minRating, maxRating, page);
+
+        if (cancelled) return;
 
         // 정보 없는것에 대한 에외처리 확인해보는 개발자 콘솔 코드
 
@@ -236,22 +269,42 @@ function MovieList() {
           })),
         );
 
-        setMovies((prev) =>
-          page === 1 ? data.results : [...prev, ...data.results],
-        );
+        setMovies((prev) => {
+          if (page === 1) return data.results;
+
+          // 리뷰 반영: 인기순은 순위가 계속 바뀌어서 다음 페이지에 같은 영화가 또 올 수 있음
+          // 이미 가진 id를 모아두고 새로 받은 것만 이어 붙여 중복 카드/key 경고 방지
+          const existingIds = new Set(prev.map((movie) => movie.id));
+          const newMovies = data.results.filter(
+            (movie) => !existingIds.has(movie.id),
+          );
+          return [...prev, ...newMovies];
+        });
+
+        // 리뷰 반영: TMDB는 total_pages와 별개로 최대 500페이지까지만 요청 가능
+        setHasMore(data.page < Math.min(data.total_pages, 500));
+      } catch {
+        // 리뷰 반영: 실패하면 에러 상태만 켜고 page는 그대로 둠 (observer가 더 증가시키지 않음)
+        if (!cancelled) setIsError(true);
       } finally {
-        setIsLoading(false);
+        // 이전 요청이 새 요청의 로딩 상태를 먼저 끄는 것도 막아야 함
+        if (!cancelled) setIsLoading(false);
       }
     };
 
     fetchMovies();
+
+    return () => {
+      cancelled = true;
+    };
   }, [minRating, maxRating, page]);
 
   //제일 중요한거 무한 스크롤
   // intersectionobserver: 감시하는 객체
   // 페이지 밑에 도착했어? > 다음페이지로 변경(이어붙여)
   useEffect(() => {
-    if (movies.length === 0 || isLoading) return;
+    // 리뷰 반영: 마지막 페이지이거나 요청이 실패한 상태면 observer를 연결하지 않음
+    if (movies.length === 0 || isLoading || !hasMore || isError) return;
 
     const target = loadMoreRef.current;
 
@@ -267,7 +320,7 @@ function MovieList() {
     observer.observe(target);
 
     return () => observer.disconnect();
-  }, [movies, isLoading]);
+  }, [movies, isLoading, hasMore, isError]);
 
   return (
     <MoviePage>
@@ -344,6 +397,18 @@ function MovieList() {
           다음 영화 불러오기
         </button> */}
       {isLoading && <p>영화 불러오는 중...</p>}
+
+      {/* 리뷰 반영: 첫 페이지 실패는 목록이 비어 있으니 전체 안내, 다음 페이지 실패는 기존 카드를 유지한 채 하단에만 안내 */}
+      {isError && (
+        <ErrorMessage>
+          {page === 1
+            ? "영화 목록을 불러오지 못했습니다."
+            : "다음 영화를 불러오지 못했습니다."}
+          <button type="button" onClick={() => setIsError(false)}>
+            다시 시도
+          </button>
+        </ErrorMessage>
+      )}
 
       <div ref={loadMoreRef} style={{ height: "1px" }} />
     </MoviePage>
