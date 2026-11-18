@@ -80,9 +80,11 @@ function AuthPage() {
 
   const { mutate, isPending, isError } = useMutation({
     mutationFn: postAuthorizationCode,
-    onSuccess: (result) => {
+    // 두 번째 인자 = mutate(part)에 실제로 넘긴 값. state의 part는 요청 중에 바뀔 수 있어서
+    // 발급된 코드와 짝이 맞는 값을 저장한다 (4주차 리뷰 반영)
+    onSuccess: (result, requestedPart) => {
       localStorage.setItem("authorizationCode", result.authorizationCode);
-      localStorage.setItem("part", part);
+      localStorage.setItem("part", requestedPart);
       navigate("/posts"); 
     },
   });
@@ -90,7 +92,11 @@ function AuthPage() {
   return (
     <Page>
       <h1>회원 코드 발급</h1>
-      <Select value={part} onChange={(e) => setPart(e.target.value as Part)}>
+      <Select
+        value={part}
+        onChange={(e) => setPart(e.target.value as Part)}
+        disabled={isPending}
+      >
         <option value="">파트를 선택하세요</option>
         {PARTS.map((p) => (
           <option key={p} value={p}>

@@ -53,7 +53,8 @@ const Nav = styled.nav`
 
 function Header() {
   const navigate = useNavigate();
-  const part = localStorage.getItem("part");
+  // 코드 없이 /posts로 바로 들어오면 part가 null이라 기본 문구를 둔다 (4주차 리뷰 반영)
+  const part = localStorage.getItem("part") ?? "SOPT";
 
 //   로그아웃 : 권한코드 삭제 한뒤 다시 발급페이지로 이동
   const handleLogout = () => {
