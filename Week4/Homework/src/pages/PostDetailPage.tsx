@@ -2,7 +2,12 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, Link, useNavigate } from "react-router";
 import styled from "@emotion/styled";
-import { getPost, updatePost, deletePost } from "../apis/post";
+import {
+  getPost,
+  updatePost,
+  deletePost,
+  type UpdatePostRequest,
+} from "../apis/post";
 import { MAX } from "../constants/post";
 import { theme } from "../styles/theme";
 import { formatDate } from "../utils/formatDate";
@@ -128,11 +133,12 @@ function PostDetailPage() {
   };
 
   const { mutate, isPending: isUpdating } = useMutation({
-    mutationFn: (body: { title: string; content: string }) =>
-      updatePost(id, body),
-    onSuccess: () => {
+    mutationFn: (body: UpdatePostRequest) => updatePost(id, body),
+    onSuccess: (updatedPost) => {
       // 상세와 목록 둘 다 갱신. 제목이 바뀌면 목록 카드도 바뀌어야 하니까
-      queryClient.invalidateQueries({ queryKey: ["post", id] });
+      // 상세: PUT 응답에 수정된 글이 통째로 오니 다시 요청하지 않고 캐시에 바로 넣는다
+      // 목록: 검색어마다 캐시가 따로 있고 pages 구조라 직접 고치기 어려워 invalidate (4주차 리뷰 반영)
+      queryClient.setQueryData(["post", id], updatedPost);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       alert("수정되었습니다.");
       setIsEditing(false);
