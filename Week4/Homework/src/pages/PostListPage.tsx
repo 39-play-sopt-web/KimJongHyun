@@ -111,8 +111,15 @@ function PostListPage() {
   // 심화과제: 무한스크롤. useQuery → useInfiniteQuery
   // 3주차엔 page state + 응답 이어붙이기 + hasMore를 직접 관리했는데, 여기선 라이브러리가 대신함
   // 커서가 뭐냐 글이 100개 있다고 하면 2페이지 주세요가 아닌 id 83부터 주세요 라고 요청함. 이 83이 바로 커서다. 이 id를 기억했다가 다음 요청에 붙이는거
-  const { data, isPending, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
+  const {
+    data,
+    isPending,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
       queryKey: ["posts", keyword],
       // pageParam = 이번 페이지를 요청할 때 쓸 cursor. 첫 페이지는 initialPageParam
       queryFn: ({ pageParam }) => getPosts(keyword, pageParam),
@@ -132,14 +139,16 @@ function PostListPage() {
 
     const observer = new IntersectionObserver(([entry]) => {
       // 이미 가져오는 중이면 중복 요청 방지 (3주차 리뷰받었던 부분이고)
-      if (entry.isIntersecting && !isFetchingNextPage) {
+      // isFetchingNextPage가 아니라 isFetching: 글 작성 후 목록을 다시 받아오는 중(refetch)에도
+      // 다음 페이지 요청이 끼어들지 않게 한다 (4주차 리뷰 반영, 공식 문서 권장 조건)
+      if (entry.isIntersecting && hasNextPage && !isFetching) {
         fetchNextPage();
       }
     });
 
     observer.observe(target);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetching, fetchNextPage]);
 
  // form 기본 동작(새로고침) 막기 
   const handleSearch = (e: React.FormEvent) => {

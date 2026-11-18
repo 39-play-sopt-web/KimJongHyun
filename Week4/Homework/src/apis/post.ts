@@ -15,7 +15,8 @@ export interface Post {
 // 라고 생각했지만 API가 페이지 번호 방식을 지원하지 않는다고 하네요! 영화 과제랑 비슷한 느낌.
 interface PostListData {
   posts: Post[];
-  nextCursor: number;
+  // 마지막 페이지에서는 null이 온다 (4주차 리뷰 반영)
+  nextCursor: number | null;
   hasNext: boolean;
 }
 
