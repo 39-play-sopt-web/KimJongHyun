@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, Link, useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { getPost, updatePost, deletePost } from "../apis/post";
+import { MAX } from "../constants/post";
 import { theme } from "../styles/theme";
 import { formatDate } from "../utils/formatDate";
 
@@ -162,8 +163,22 @@ function PostDetailPage() {
     mutate({ title, content });
   };
 
+  // 작성 페이지와 같은 기준: 빈 값이거나 글자 수를 넘으면 저장 불가 (4주차 리뷰 반영)
+  const isInvalid =
+    title.trim() === "" ||
+    content.trim() === "" ||
+    title.length > MAX.title ||
+    content.length > MAX.content;
+
   if (isPending) return <Page>불러오는 중...</Page>;
-  if (isError) return <Page>게시글을 불러오지 못했어요.</Page>;
+  // 조회에 실패해도 목록으로 돌아갈 수 있게 BackLink는 유지 (4주차 리뷰 반영)
+  if (isError)
+    return (
+      <Page>
+        <BackLink to="/posts">← 목록으로</BackLink>
+        <p>게시글을 불러오지 못했어요.</p>
+      </Page>
+    );
 
   return (
     <Page>
@@ -178,7 +193,7 @@ function PostDetailPage() {
               onChange={(e) => setContent(e.target.value)}
             />
             <ButtonRow>
-              <button type="submit" disabled={isUpdating}>
+              <button type="submit" disabled={isInvalid || isUpdating}>
                 {isUpdating ? "저장 중..." : "저장"}
               </button>
               <button type="button" onClick={() => setIsEditing(false)}>

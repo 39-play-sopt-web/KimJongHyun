@@ -4,9 +4,7 @@ import { Link, useNavigate } from "react-router";
 import styled from "@emotion/styled";
 import { createPost } from "../apis/post";
 import { theme } from "../styles/theme";
-
-// API 문서 기준 글자 수 제한
-const MAX = { title: 50, content: 1000, author: 20 };
+import { MAX } from "../constants/post";
 
 const Page = styled.main`
   max-width: 600px;
