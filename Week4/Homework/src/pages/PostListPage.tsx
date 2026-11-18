@@ -154,7 +154,12 @@ function PostListPage() {
       <SearchForm onSubmit={handleSearch}>
         <input
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setInputValue(value);
+            // 입력을 다 지우면 확정된 검색어도 비워서 전체 목록으로 돌아간다 (4주차 리뷰 반영)
+            if (value.trim() === "") setKeyword("");
+          }}
           placeholder="제목 검색"
         />
         {/* Input이 비어있으면 검색 버튼 비활성화 */}
@@ -165,6 +170,11 @@ function PostListPage() {
 
       {isPending && <p>불러오는 중...</p>}
       {isError && <p>목록을 불러오지 못했어요.</p>}
+
+      {/* 글이 하나도 없을 때 안내 문구 (4주차 리뷰 반영) */}
+      {data && data.pages[0].posts.length === 0 && (
+        <p>{keyword ? "검색 결과가 없습니다." : "게시글이 없습니다."}</p>
+      )}
 
       {data && (
         <CardList>
